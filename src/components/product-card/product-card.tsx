@@ -34,14 +34,13 @@ function ProductCard({guitar, guitarComments, currentId}: ConnectedComponentProp
     if( guitarComments === null) {
       currentId =  id;
       (store.dispatch as ThunkAppDispatch)(fetchCommentsDataAction(id, currentId));
+    } else if( guitarComments !== null && id !== currentId) {
+      if (id === undefined) {
+        return <div>No data</div>;
+      }
+      currentId =  id;
+      (store.dispatch as ThunkAppDispatch)(fetchCommentsDataAction(id, currentId));
     }
-    // else if( guitarComments !== null && id !== guitarComments[0].guitarId) {
-    //   if (id === undefined) {
-    //     return <div>No data</div>;
-    //   }
-    //   currentId =  id;
-    //   (store.dispatch as ThunkAppDispatch)(fetchCommentsDataAction(id, currentId));
-    // }
 
     return(
       <div className="product-card">
