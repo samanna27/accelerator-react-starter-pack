@@ -1,5 +1,10 @@
+// import { Switch, Route, Router as BrowserRouter } from 'react-router-dom';
+import CatalogPage from '../catalog-page/catalog-page';
+
 function App(): JSX.Element {
-  return <p>Hello, world!</p>;
+  return (
+    <CatalogPage />
+  );
 }
 
 export default App;
