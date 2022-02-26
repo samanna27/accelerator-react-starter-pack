@@ -1,4 +1,24 @@
-function Header(): JSX.Element {
+import { ChangeEvent } from 'react';
+import { connect, ConnectedProps } from 'react-redux';
+import { State } from '../../types/state';
+// import { useState} from 'react';
+
+const mapStateToProps = ({guitars}: State) => ({
+  guitars,
+});
+
+const connector = connect(mapStateToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+type ConnectedComponentProps = PropsFromRedux;
+
+function Header({guitars}: ConnectedComponentProps): JSX.Element {
+  // const [searchList, setSearchList] = useState([]);
+  const handleSearchFieldChange = (evt: ChangeEvent<HTMLInputElement>) => {
+    // const similarGuitars = guitars.slice().map((guitar) => guitar.name.includes(evt.target.value) ? guitar.name : '').filter((name) => name !== '');
+    // setSearchList(similarGuitars);
+  };
+
   return (
     <header className="header" id="header">
       <div className="container header__wrapper">
@@ -22,7 +42,7 @@ function Header(): JSX.Element {
                 <use xlinkHref="#icon-search"></use>
               </svg><span className="visually-hidden">Начать поиск</span>
             </button>
-            <input className="form-search__input" id="search" type="text" autoComplete="off" placeholder="что вы ищите?" />
+            <input className="form-search__input" id="search" type="text" autoComplete="off" placeholder="что вы ищите?" onChange={(evt) => handleSearchFieldChange(evt)} />
             <label className="visually-hidden" htmlFor="search">Поиск</label>
           </form>
           <ul className="form-search__select-list hidden">
@@ -44,4 +64,5 @@ function Header(): JSX.Element {
   );
 }
 
-export default Header;
+export {Header};
+export default connector(Header);

@@ -12,12 +12,15 @@ export const fetchProductsAction = (): ThunkActionResult =>
     dispatch(loadGuitars(data));
   };
 
-export const fetchCommentsDataAction = (id: number, currentId: number ): ThunkActionResult =>
+export const fetchCommentsDataAction = (id: number): ThunkActionResult =>
+// export const fetchCommentsDataAction = (id: number, currezntId: number ): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
     await api.get<Comment[]>(`/guitars/${id}/comments`)
       .then((data) => {
         if(data.status === OK_CODE){
-          dispatch(loadGuitarComments(data.data, currentId));
+          dispatch(loadGuitarComments(data.data));
+          // dispatch(loadGuitarComments(data.data, currentId));
+          return data.data;
         }
       });
   };

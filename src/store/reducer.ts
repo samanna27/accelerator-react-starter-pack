@@ -15,8 +15,9 @@ const reducer = (state: State = initialState, action: Actions): State => {
     }
     case ActionType.LoadGuitarComments: {
       const guitarComments = action.payload.guitarComments;
-      const currentId = action.payload.currentId;
-      return {...state, guitarComments, currentId};
+      // const currentId = action.payload.currentId;
+      return {...state, guitarComments};
+      // return {...state, guitarComments, currentId};
     }
     default:
       return state;

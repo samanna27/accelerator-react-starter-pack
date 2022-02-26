@@ -8,9 +8,11 @@ export const loadGuitars = (guitars: Guitar[]) => ({
   },
 } as const);
 
-export const loadGuitarComments = (guitarComments: Comment[], currentId: number | null) => ({
+export const loadGuitarComments = (guitarComments: Comment[]) => ({
+// export const loadGuitarComments = (guitarComments: Comment[], currentId: number | null) => ({
   type: ActionType.LoadGuitarComments,
   payload: {
-    guitarComments, currentId,
+    guitarComments,
+    // guitarComments, currentId,
   },
 } as const);
