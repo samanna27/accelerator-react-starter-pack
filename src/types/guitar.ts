@@ -21,3 +21,7 @@ export type Comment = {
   createAt: Date;
   guitarId: number;
 };
+
+type GuitarsComments = [number, Comment[]];
+
+export type AllGuitarComments = GuitarsComments[];

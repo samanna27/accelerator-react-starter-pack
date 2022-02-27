@@ -3,7 +3,7 @@ import { State } from '../types/state';
 
 const initialState = {
   guitars: [],
-  guitarComments: null,
+  allGuitarsComments: [],
   currentId: 0,
 };
 
@@ -14,10 +14,10 @@ const reducer = (state: State = initialState, action: Actions): State => {
       return {...state, guitars};
     }
     case ActionType.LoadGuitarComments: {
-      const guitarComments = action.payload.guitarComments;
-      // const currentId = action.payload.currentId;
-      return {...state, guitarComments};
-      // return {...state, guitarComments, currentId};
+      const allGuitarsComments = state.allGuitarsComments.slice();
+      const id = action.payload.guitarId;
+      allGuitarsComments.push([id, action.payload.guitarComments]);
+      return {...state, allGuitarsComments};
     }
     default:
       return state;

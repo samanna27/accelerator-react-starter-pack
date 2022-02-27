@@ -1,7 +1,7 @@
-import { Guitar, Comment } from './guitar';
+import { Guitar, AllGuitarComments } from './guitar';
 
 export type State = {
   guitars: Guitar[],
-  guitarComments: Comment[] | null,
+  allGuitarsComments: AllGuitarComments,
   currentId: number,
 };
