@@ -22,7 +22,7 @@ function Header({guitars}: ConnectedComponentProps): JSX.Element {
 
   const handleSearchFieldChange = (evt: ChangeEvent<HTMLInputElement>) => {
     evt.preventDefault();
-    const similarGuitars = guitars.slice().map((guitar) => guitar.name.indexOf(evt.target.value) === -1 ? '' : guitar.name).filter((name) => name !== '');
+    const similarGuitars = guitars.slice().map((guitar) => guitar.name.toLowerCase().indexOf(evt.target.value.toLowerCase()) === -1 ? '' : guitar.name).filter((name) => name !== '');
     setSearchList(similarGuitars);
   };
 
