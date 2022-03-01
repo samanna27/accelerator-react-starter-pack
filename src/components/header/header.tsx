@@ -1,7 +1,11 @@
-import { ChangeEvent } from 'react';
+import { ChangeEvent, MouseEvent, KeyboardEvent } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { State } from '../../types/state';
-// import { useState} from 'react';
+import { useState, useRef, useEffect} from 'react';
+import { AppRoute } from '../../const';
+import {redirectToRoute} from '../../store/action';
+import {ThunkAppDispatch} from '../../types/action';
+import {store} from '../../index';
 
 const mapStateToProps = ({guitars}: State) => ({
   guitars,
@@ -13,10 +17,28 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux;
 
 function Header({guitars}: ConnectedComponentProps): JSX.Element {
-  // const [searchList, setSearchList] = useState([]);
+  const [searchList, setSearchList] = useState(['']);
+  const searchTab = useRef<HTMLInputElement>(null);
+
   const handleSearchFieldChange = (evt: ChangeEvent<HTMLInputElement>) => {
-    // const similarGuitars = guitars.slice().map((guitar) => guitar.name.includes(evt.target.value) ? guitar.name : '').filter((name) => name !== '');
-    // setSearchList(similarGuitars);
+    evt.preventDefault();
+    const similarGuitars = guitars.slice().map((guitar) => guitar.name.indexOf(evt.target.value) === -1 ? '' : guitar.name).filter((name) => name !== '');
+    setSearchList(similarGuitars);
+  };
+
+  useEffect(()=> {
+    if(searchTab.current?.value === '' && searchList !== ['']) {setSearchList(['']);}
+  }, [searchTab.current?.value]);
+
+  const handleGuitarOptionClick = (evt: MouseEvent<HTMLElement> | KeyboardEvent<HTMLElement>) => {
+    evt.preventDefault();
+    if(searchTab.current !== null) {searchTab.current.value = '';}
+    setSearchList(['']);
+    //eslint-disable-next-line
+    console.log('we are in click handler');
+    // const searchedGuitarName = evt.currentTarget.innerText;
+    // const searchedGuitarId = guitars.find((guitar) => guitar.name === searchedGuitarName)?.id;
+    (store.dispatch as ThunkAppDispatch)(redirectToRoute(AppRoute.Guitar));
   };
 
   return (
@@ -35,23 +57,21 @@ function Header({guitars}: ConnectedComponentProps): JSX.Element {
             </li>
           </ul>
         </nav>
-        <div className="form-search">
+        <div className="form-search" style={{zIndex: '1000'}}>
           <form className="form-search__form">
             <button className="form-search__submit" type="submit">
               <svg className="form-search__icon" width="14" height="15" aria-hidden="true">
                 <use xlinkHref="#icon-search"></use>
               </svg><span className="visually-hidden">Начать поиск</span>
             </button>
-            <input className="form-search__input" id="search" type="text" autoComplete="off" placeholder="что вы ищите?" onChange={(evt) => handleSearchFieldChange(evt)} />
+            <input className="form-search__input" id="search" type="text" autoComplete="off" placeholder="что вы ищите?" ref={searchTab} onChange={(evt) => handleSearchFieldChange(evt)}></input>
             <label className="visually-hidden" htmlFor="search">Поиск</label>
           </form>
-          <ul className="form-search__select-list hidden">
-            <li className="form-search__select-item" tabIndex={0}>Четстер Plus</li>
-            <li className="form-search__select-item" tabIndex={0}>Четстер UX</li>
-            <li className="form-search__select-item" tabIndex={0}>Четстер UX2</li>
-            <li className="form-search__select-item" tabIndex={0}>Четстер UX3</li>
-            <li className="form-search__select-item" tabIndex={0}>Четстер UX4</li>
-            <li className="form-search__select-item" tabIndex={0}>Четстер UX5</li>
+          <ul className={searchList[0] === '' ? 'form-search__select-list hidden' : 'form-search__select-list'}>
+            {searchList.map((guitar) =>(
+              <li key={guitar} className="form-search__select-item" tabIndex={0} style={{display: 'block', position: 'relative', zIndex: '1000', width: '100%'}} onClick={(evt) => handleGuitarOptionClick(evt)}>
+                {guitar}
+              </li>))}
           </ul>
         </div>
         <a className="header__cart-link" href="#" aria-label="Корзина">

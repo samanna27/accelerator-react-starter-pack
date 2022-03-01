@@ -1,5 +1,10 @@
+export enum AppRoute {
+  Catalog = '/',
+  Guitar = '/guitars/:id',
+}
+
 export enum APIRoute {
-  Guitars = 'guitars',
+  Guitars = '/guitars',
 }
 
 export const MAX_STAR_RATING = 5;

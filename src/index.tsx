@@ -9,7 +9,7 @@ import {composeWithDevTools} from 'redux-devtools-extension';
 import {reducer} from './store/reducer';
 import {fetchProductsAction} from './store/api-actions';
 import {ThunkAppDispatch} from './types/action';
-// import {redirect} from './store/middlewares/redirect';
+import {redirect} from './store/middlewares/redirect';
 // import {ToastContainer} from 'react-toastify';
 // import 'react-toastify/dist/ReactToastify.css';
 
@@ -19,7 +19,7 @@ export const store = createStore(
   reducer,
   composeWithDevTools(
     applyMiddleware(thunk.withExtraArgument(api)),
-    // applyMiddleware(redirect),
+    applyMiddleware(redirect),
   ),
 );
 

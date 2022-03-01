@@ -1,5 +1,6 @@
 import { ActionType } from '../types/action';
 import { Guitar, Comment } from '../types/guitar';
+import { AppRoute } from '../const';
 
 export const loadGuitars = (guitars: Guitar[]) => ({
   type: ActionType.LoadGuitars,
@@ -9,11 +10,14 @@ export const loadGuitars = (guitars: Guitar[]) => ({
 } as const);
 
 export const loadGuitarComments = (guitarComments: Comment[], guitarId: number) => ({
-// export const loadGuitarComments = (guitarComments: Comment[], currentId: number | null) => ({
   type: ActionType.LoadGuitarComments,
   payload: {
     guitarComments,
     guitarId,
-    // guitarComments, currentId,
   },
+} as const);
+
+export const redirectToRoute = (url: AppRoute) => ({
+  type: ActionType.RedirectToRoute,
+  payload: url,
 } as const);
