@@ -34,8 +34,6 @@ function Header({guitars}: ConnectedComponentProps): JSX.Element {
     evt.preventDefault();
     if(searchTab.current !== null) {searchTab.current.value = '';}
     setSearchList(['']);
-    //eslint-disable-next-line
-    console.log('we are in click handler');
     // const searchedGuitarName = evt.currentTarget.innerText;
     // const searchedGuitarId = guitars.find((guitar) => guitar.name === searchedGuitarName)?.id;
     (store.dispatch as ThunkAppDispatch)(redirectToRoute(AppRoute.Guitar));

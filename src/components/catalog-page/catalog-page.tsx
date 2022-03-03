@@ -6,9 +6,12 @@ import CatalogFilter from '../catalog-filter/catalog-filter';
 import CatalogSort from '../catalog-sort/catalog-sort';
 import Header from '../header/header';
 import Footer from '../footer/footer';
+import { sortGuitarsPriceDown, sortGuitarsRatingDown, sortGuitarsPriceUp, sortGuitarsRatingUp } from '../../utils/common';
 
-const mapStateToProps = ({guitars}: State) => ({
+const mapStateToProps = ({guitars, sortType, orderType}: State) => ({
   guitars,
+  sortType,
+  orderType,
 });
 
 const connector = connect(mapStateToProps);
@@ -16,7 +19,39 @@ const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux;
 
-function CatalogPage({guitars}: ConnectedComponentProps): JSX.Element {
+function CatalogPage({guitars, sortType, orderType}: ConnectedComponentProps): JSX.Element {
+  const getSortedGuitars = () => {
+    switch (sortType) {
+      case 'по цене':
+        return guitars.sort(sortGuitarsPriceUp);
+      case 'по популярности':
+        return guitars.sort(sortGuitarsRatingUp);
+      default:
+        return guitars;
+    }
+  };
+  const getSortedAndOrderedGuitars = () => {
+    switch (orderType) {
+      case 'down':
+        switch (sortType) {
+          case 'по цене':
+          case '':
+            return guitars.sort(sortGuitarsPriceDown);
+          case 'по популярности':
+            return guitars.sort(sortGuitarsRatingDown);}
+        break;
+      case 'up':
+        switch (sortType) {
+          case 'по цене':
+          case '':
+            return guitars.sort(sortGuitarsPriceUp);
+          case 'по популярности':
+            return guitars.sort(sortGuitarsRatingUp);}
+        break;
+      default:
+        return getSortedGuitars();
+    }
+  };
 
   return(
     <>
@@ -36,7 +71,7 @@ function CatalogPage({guitars}: ConnectedComponentProps): JSX.Element {
               <CatalogFilter />
               <CatalogSort />
               <div className="cards catalog__cards">
-                {guitars.slice(0,9).map((guitar) => (
+                {getSortedAndOrderedGuitars()?.slice(0,9).map((guitar) => (
                   <ProductCard key={guitar.id} guitar={guitar} />
                 ))}
               </div>

@@ -21,3 +21,13 @@ export const redirectToRoute = (url: AppRoute) => ({
   type: ActionType.RedirectToRoute,
   payload: url,
 } as const);
+
+export const changeSortType = (sortType: string) => ({
+  type: ActionType.ChangeSortType,
+  payload: sortType,
+} as const);
+
+export const changeOrderType = (orderType: string) => ({
+  type: ActionType.ChangeOrderType,
+  payload: orderType,
+} as const);

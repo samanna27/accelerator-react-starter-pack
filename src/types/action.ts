@@ -10,19 +10,25 @@ import {State} from '../types/state';
 import {
   loadGuitars,
   loadGuitarComments,
-  redirectToRoute
+  redirectToRoute,
+  changeSortType,
+  changeOrderType
 } from '../store/action';
 
 export enum ActionType {
   LoadGuitars = 'data/loadGuitars',
   LoadGuitarComments = 'data/loadGuitarComments',
-  RedirectToRoute = 'main/redirectToRoute'
+  RedirectToRoute = 'main/redirectToRoute',
+  ChangeSortType = 'data/changeSortType',
+  ChangeOrderType = 'data/changeOrderType'
 }
 
 export type Actions =
  | ReturnType<typeof loadGuitars>
  | ReturnType<typeof loadGuitarComments>
- | ReturnType<typeof redirectToRoute>;
+ | ReturnType<typeof redirectToRoute>
+ | ReturnType<typeof changeSortType>
+ | ReturnType<typeof changeOrderType>;
 
 export type ThunkActionResult<R = Promise<void>> = ThunkAction<R, State, AxiosInstance, Actions>;
 

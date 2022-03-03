@@ -5,6 +5,8 @@ const initialState = {
   guitars: [],
   allGuitarsComments: [],
   currentId: 0,
+  sortType: '',
+  orderType: '',
 };
 
 const reducer = (state: State = initialState, action: Actions): State => {
@@ -18,6 +20,14 @@ const reducer = (state: State = initialState, action: Actions): State => {
       const id = action.payload.guitarId;
       allGuitarsComments.push([id, action.payload.guitarComments]);
       return {...state, allGuitarsComments};
+    }
+    case ActionType.ChangeSortType: {
+      const sortType = action.payload;
+      return {...state, sortType};
+    }
+    case ActionType.ChangeOrderType: {
+      const orderType = action.payload;
+      return {...state, orderType};
     }
     default:
       return state;
