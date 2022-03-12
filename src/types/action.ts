@@ -12,7 +12,12 @@ import {
   loadGuitarComments,
   redirectToRoute,
   changeSortType,
-  changeOrderType
+  changeOrderType,
+  updateMinPriceFilter,
+  setMaxPriceFilter,
+  updateGuitarTypeFilter,
+  updateStringsTypeFilter,
+  updateCardsRendered
 } from '../store/action';
 
 export enum ActionType {
@@ -20,7 +25,12 @@ export enum ActionType {
   LoadGuitarComments = 'data/loadGuitarComments',
   RedirectToRoute = 'main/redirectToRoute',
   ChangeSortType = 'data/changeSortType',
-  ChangeOrderType = 'data/changeOrderType'
+  ChangeOrderType = 'data/changeOrderType',
+  UpdateMinPriceFilter = 'data/updateMinPriceFilter',
+  SetMaxPriceFilter = 'data/setMaxPriceFilter',
+  UpdateGuitarTypeFilter = 'data/updateGuitarTypeFilter',
+  UpdateStringsTypeFilter = 'data/updateStringsTypeFilter',
+  UpdateCardsRendered = 'data/updateCardsRendered'
 }
 
 export type Actions =
@@ -28,7 +38,12 @@ export type Actions =
  | ReturnType<typeof loadGuitarComments>
  | ReturnType<typeof redirectToRoute>
  | ReturnType<typeof changeSortType>
- | ReturnType<typeof changeOrderType>;
+ | ReturnType<typeof changeOrderType>
+ | ReturnType<typeof updateMinPriceFilter>
+ | ReturnType<typeof setMaxPriceFilter>
+ | ReturnType<typeof updateGuitarTypeFilter>
+ | ReturnType<typeof updateStringsTypeFilter>
+ | ReturnType<typeof updateCardsRendered>;
 
 export type ThunkActionResult<R = Promise<void>> = ThunkAction<R, State, AxiosInstance, Actions>;
 

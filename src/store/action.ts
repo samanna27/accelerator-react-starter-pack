@@ -31,3 +31,28 @@ export const changeOrderType = (orderType: string) => ({
   type: ActionType.ChangeOrderType,
   payload: orderType,
 } as const);
+
+export const updateMinPriceFilter = (minPriceFilter: number) => ({
+  type: ActionType.UpdateMinPriceFilter,
+  payload: minPriceFilter,
+} as const);
+
+export const setMaxPriceFilter = (maxPriceFilter: number) => ({
+  type: ActionType.SetMaxPriceFilter,
+  payload: maxPriceFilter,
+} as const);
+
+export const updateGuitarTypeFilter = (type: string) => ({
+  type: ActionType.UpdateGuitarTypeFilter,
+  payload: type,
+} as const);
+
+export const updateStringsTypeFilter = (stringsQuantity: number[]) => ({
+  type: ActionType.UpdateStringsTypeFilter,
+  payload: stringsQuantity,
+} as const);
+
+export const updateCardsRendered = (cardsRendered: number[]) => ({
+  type: ActionType.UpdateCardsRendered,
+  payload: cardsRendered,
+} as const);

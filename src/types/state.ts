@@ -1,4 +1,4 @@
-import { Guitar, AllGuitarComments } from './guitar';
+import { Guitar, AllGuitarComments, GuitarTypeChecked } from './guitar';
 
 export type State = {
   guitars: Guitar[],
@@ -6,4 +6,9 @@ export type State = {
   currentId: number,
   sortType: string,
   orderType: string,
+  minPriceFilter: number,
+  maxPriceFilter: number,
+  guitarType: GuitarTypeChecked,
+  stringsQuantity: number[],
+  cardsRendered: number[],
 };

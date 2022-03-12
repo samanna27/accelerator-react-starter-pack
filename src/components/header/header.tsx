@@ -3,9 +3,9 @@ import { connect, ConnectedProps } from 'react-redux';
 import { State } from '../../types/state';
 import { useState, useRef, useEffect} from 'react';
 import { AppRoute } from '../../const';
-import {redirectToRoute} from '../../store/action';
-import {ThunkAppDispatch} from '../../types/action';
-import {store} from '../../index';
+import { redirectToRoute } from '../../store/action';
+import { ThunkAppDispatch } from '../../types/action';
+import { store } from '../../index';
 
 const mapStateToProps = ({guitars}: State) => ({
   guitars,
@@ -26,7 +26,7 @@ function Header({guitars}: ConnectedComponentProps): JSX.Element {
     setSearchList(similarGuitars);
   };
 
-  useEffect(()=> {
+  useEffect(() => {
     if(searchTab.current?.value === '' && searchList !== ['']) {setSearchList(['']);}
   }, [searchTab.current?.value]);
 
