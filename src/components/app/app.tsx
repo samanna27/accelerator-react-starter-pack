@@ -17,7 +17,6 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux;
 
 function App(props: ConnectedComponentProps): JSX.Element {
-  // const {guitars} = props;
 
   return (
     <BrowserRouter history={browserHistory}>
@@ -26,11 +25,6 @@ function App(props: ConnectedComponentProps): JSX.Element {
           <CatalogPage />
         </Route>
         <Route exact path={AppRoute.Guitar}>
-          {/* render={(params) => {
-            const guitarId = parseInt(params.match.params.id, 10);
-            const matchedGuitar = guitars.find((guitar) => guitar.id === guitarId);
-            <GuitarPage guitar={matchedGuitar}/>;
-          }} */}
           <GuitarPage />;
         </Route>
         <Route>
