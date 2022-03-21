@@ -11,4 +11,5 @@ export type State = {
   guitarType: GuitarTypeChecked,
   stringsQuantity: number[],
   cardsRendered: number[],
+  isDataLoaded: boolean,
 };

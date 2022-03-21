@@ -9,11 +9,10 @@ import { nanoid } from 'nanoid';
 import { StringsChecked, Guitar } from '../../types/guitar';
 
 type CatalogFilterProps = {
-  guitarsForRendering: Guitar[] | null,
+  guitarsForRendering: Guitar[],
 }
 
-const mapStateToProps =({guitars, minPriceFilter, maxPriceFilter, guitarType, cardsRendered, stringsQuantity}: State) => ({
-  guitars,
+const mapStateToProps =({minPriceFilter, maxPriceFilter, guitarType, cardsRendered, stringsQuantity}: State) => ({
   minPriceFilter,
   maxPriceFilter,
   guitarType,
@@ -26,9 +25,9 @@ const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>
 type ConnectedComponentProps = PropsFromRedux & CatalogFilterProps;
 
-function CatalogFilter({guitars, minPriceFilter, maxPriceFilter, guitarType, stringsQuantity, guitarsForRendering}: ConnectedComponentProps):JSX.Element {
-  const minPrice =  Math.min(...guitars.map((guitar) => guitar.price));
-  const maxPrice = Math.max(...guitars.map((guitar) => guitar.price));
+function CatalogFilter({minPriceFilter, maxPriceFilter, guitarType, stringsQuantity, guitarsForRendering}: ConnectedComponentProps):JSX.Element {
+  const minPrice =  Math.min(...guitarsForRendering.map((guitar) => guitar.price));
+  const maxPrice = Math.max(...guitarsForRendering.map((guitar) => guitar.price));
   const minPriceRef = useRef<HTMLInputElement>(null);
   const maxPriceRef = useRef<HTMLInputElement>(null);
   const [isMinPrice, setIsMinPrice] = useState<string>('');
@@ -124,6 +123,16 @@ function CatalogFilter({guitars, minPriceFilter, maxPriceFilter, guitarType, str
 
     setIsStringsActive(stringsOfGuitarTypesChecked); //пушим Set струн по активированным гитарам в состояние
   }, [guitarType]);
+
+  useEffect(() => {
+    if(minPriceRef.current && minPriceRef.current.value !== '' && Number(minPriceRef.current?.value) < minPrice) {
+      minPriceRef.current.value = minPrice.toString();
+      (store.dispatch as ThunkAppDispatch)(updateMinPriceFilter(minPrice));
+    }
+    if(maxPriceRef.current && Number(maxPriceRef.current?.value) > maxPrice) {
+      maxPriceRef.current.value = maxPrice.toString();
+    }
+  }, [guitarType, stringsQuantity]);
 
   const handleStringsQuantityChange = (item: number) => {
     stringsChecked[item] = !stringsChecked[item]; // отмечаем, какое количество струн было выбрано

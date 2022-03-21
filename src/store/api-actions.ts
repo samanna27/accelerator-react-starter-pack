@@ -7,15 +7,26 @@ import {
 } from './action';
 import { APIRoute, OK_CODE } from '../const';
 import { Guitar, Comment } from '../types/guitar';
+import {toast} from 'react-toastify';
+
+const FAIL_MESSAGE = 'Сервер недоступен';
 
 export const fetchProductsAction = (): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
-    const {data} = await api.get<Guitar[]>(APIRoute.Guitars);
-    dispatch(loadGuitars(data));
-    const minPriceFilter = Math.min(...data.map((item) => item.price));
-    const maxPriceFilter = Math.max(...data.map((item) => item.price)) ;
-    dispatch(updateMinPriceFilter(minPriceFilter));
-    dispatch(setMaxPriceFilter(maxPriceFilter));
+    try {
+      await api.get<Guitar[]>(APIRoute.Guitars)
+        .then((data) => {
+          if(data.status === OK_CODE) {
+            dispatch(loadGuitars(data.data));
+            const minPriceFilter = Math.min(...data.data.map((item) => item.price));
+            const maxPriceFilter = Math.max(...data.data.map((item) => item.price)) ;
+            dispatch(updateMinPriceFilter(minPriceFilter));
+            dispatch(setMaxPriceFilter(maxPriceFilter));
+          }
+        });
+    } catch {
+      toast.info(FAIL_MESSAGE);
+    }
   };
 
 export const fetchCommentsDataAction = (id: number): ThunkActionResult =>

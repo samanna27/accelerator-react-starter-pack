@@ -8,7 +8,7 @@ import CatalogSort from '../catalog-sort/catalog-sort';
 import Header from '../header/header';
 import Footer from '../footer/footer';
 import { sortGuitarsPriceDown, sortGuitarsRatingDown, sortGuitarsPriceUp, sortGuitarsRatingUp } from '../../utils/common';
-import { CARDS_PER_PAGE, END_CARD_INDEX, GUITARS_TYPES_CHECKED, PAGENATION, START_CARD_INDEX } from '../../const';
+import { CARDS_PER_PAGE, END_CARD_INDEX, GUITARS_TYPES_CHECKED, PAGENATION, START_CARD_INDEX, GUITAR_TYPE_CHECKED_FLAG, GUITAR_TYPE_CHECKED_INDEX } from '../../const';
 import { useState, SyntheticEvent, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { store } from '../../index';
@@ -16,6 +16,7 @@ import { updateCardsRendered } from '../../store/action';
 import { ThunkAppDispatch } from '../../types/action';
 import PreviousPage from './previous-page';
 import NextPage from './next-page';
+import { useHistory } from 'react-router-dom';
 
 const mapStateToProps = ({guitars, sortType, orderType, minPriceFilter, maxPriceFilter, guitarType, stringsQuantity, cardsRendered}: State) => ({
   guitars,
@@ -41,6 +42,7 @@ function CatalogPage({guitars, sortType, orderType, minPriceFilter, maxPriceFilt
   const [isDeactivatePreviousPage, setIsDeactivatePreviousPage] = useState<boolean>(false);
   const [guitarsFromTo, setGuitarsFromTo] = useState<number[]>([0,CARDS_PER_PAGE]);
   const pageURL = `catalog/page_${Math.round((cardsRendered[START_CARD_INDEX]+1)/CARDS_PER_PAGE+1)}`;
+  const history = useHistory();
 
   useEffect(() => {
     setIsActivePage('');
@@ -48,6 +50,7 @@ function CatalogPage({guitars, sortType, orderType, minPriceFilter, maxPriceFilt
     setIsNextPage(true);
     setIsDeactivateNextPage(false);
     setIsDeactivatePreviousPage(false);
+
   }, [guitarType, stringsQuantity]);
 
   const getSortedGuitars = () => {
@@ -163,6 +166,15 @@ function CatalogPage({guitars, sortType, orderType, minPriceFilter, maxPriceFilt
     }
   };
 
+  useEffect(()=>{
+    const guitarTypesforUrlSearch = Object.entries(guitarType).filter((item)=>item[GUITAR_TYPE_CHECKED_FLAG] === true).map((item)=>item[GUITAR_TYPE_CHECKED_INDEX]).join('&');
+    const getURL = `${pageURL}${guitarTypesforUrlSearch.length > 0 ? `?_type=${guitarTypesforUrlSearch}`:''}${stringsQuantity.length > 0 ? `&_stringCount=${stringsQuantity.join('&')}`: ''}${ sortType.length > 0 ? `?_sort=${sortType}`:''}${orderType.length > 0 ? `&_order=${orderType}`: ''}`;
+    history.push({
+      pathname: window.location.pathname,
+      search: getURL,
+    });
+  },[guitarType, stringsQuantity, sortType, orderType, cardsRendered]);
+
   return(
     <>
       <Logo />
@@ -178,7 +190,7 @@ function CatalogPage({guitars, sortType, orderType, minPriceFilter, maxPriceFilt
               </li>
             </ul>
             <div className="catalog">
-              <CatalogFilter guitarsForRendering={guitarsForRendering ? guitarsForRendering : null}/>
+              <CatalogFilter guitarsForRendering={guitarsForRendering ? guitarsForRendering : guitars}/>
               <CatalogSort />
               <div className="cards catalog__cards">
                 {guitarsForRendering?.slice(cardsRendered[START_CARD_INDEX],cardsRendered[END_CARD_INDEX]).map((guitar) => (

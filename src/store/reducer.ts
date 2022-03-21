@@ -14,13 +14,14 @@ const initialState = {
   guitarType: GUITARS_TYPES_CHECKED,
   stringsQuantity: [],
   cardsRendered: [0, CARDS_PER_PAGE],
+  isDataLoaded: false,
 };
 
 const reducer = (state: State = initialState, action: Actions): State => {
   switch (action.type) {
     case ActionType.LoadGuitars: {
       const {guitars} = action.payload;
-      return {...state, guitars};
+      return {...state, guitars, isDataLoaded: true};
     }
     case ActionType.LoadGuitarComments: {
       const allGuitarsComments = state.allGuitarsComments.slice();
