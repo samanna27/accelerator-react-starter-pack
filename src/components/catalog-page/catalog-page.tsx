@@ -40,6 +40,7 @@ function CatalogPage({guitars, sortType, orderType, minPriceFilter, maxPriceFilt
   const [isDeactivateNextPage, setIsDeactivateNextPage] = useState<boolean>(false);
   const [isDeactivatePreviousPage, setIsDeactivatePreviousPage] = useState<boolean>(false);
   const [guitarsFromTo, setGuitarsFromTo] = useState<number[]>([0,CARDS_PER_PAGE]);
+  const pageURL = `catalog/page_${Math.round((cardsRendered[START_CARD_INDEX]+1)/CARDS_PER_PAGE+1)}`;
 
   useEffect(() => {
     setIsActivePage('');
@@ -94,6 +95,7 @@ function CatalogPage({guitars, sortType, orderType, minPriceFilter, maxPriceFilt
       return guitar;
     }
   };
+
   const guitarsForRendering = getSortedAndOrderedGuitars()?.filter((guitar)=>(guitar.price >= minPriceFilter && guitar.price <= maxPriceFilter)).filter(filterByGuitarType).filter(filterByStringsQuantity);
 
   const handlePreviousNextPageClick = (evt: SyntheticEvent<HTMLAnchorElement>) => {
@@ -176,7 +178,7 @@ function CatalogPage({guitars, sortType, orderType, minPriceFilter, maxPriceFilt
               </li>
             </ul>
             <div className="catalog">
-              <CatalogFilter />
+              <CatalogFilter guitarsForRendering={guitarsForRendering ? guitarsForRendering : null}/>
               <CatalogSort />
               <div className="cards catalog__cards">
                 {guitarsForRendering?.slice(cardsRendered[START_CARD_INDEX],cardsRendered[END_CARD_INDEX]).map((guitar) => (
@@ -185,20 +187,23 @@ function CatalogPage({guitars, sortType, orderType, minPriceFilter, maxPriceFilt
               </div>
               <div className="pagination page-content__pagination">
                 <ul className="pagination__list">
-                  {isPreviousPage? <PreviousPage isDeactivatePreviousPage={isDeactivatePreviousPage} onClick={handlePreviousNextPageClick}/> : '' }
+                  {isPreviousPage? <PreviousPage pageURL={pageURL} isDeactivatePreviousPage={isDeactivatePreviousPage} onClick={handlePreviousNextPageClick}/> : '' }
                   {PAGENATION.map((page) => (
-                    <li key={page}
-                      className={`pagination__page ${ isActivePage === page.toString() ? 'pagination__page--active' : ''}`}
-                    >
-                      <Link className="link pagination__page-link" to={`catalog/page_${page}`} onClick={(evt) => {
-                        setIsActivePage(page.toString());
-                        handlePageClick(evt);
-                      }}
-                      >{page}
-                      </Link>
-                    </li>))}
+                    guitarsForRendering && ((page-1)*CARDS_PER_PAGE < guitarsForRendering.length)
+                      ?
+                      <li key={page}
+                        className={`pagination__page ${ isActivePage === page.toString() ? 'pagination__page--active' : ''}`}
+                      >
+                        <Link className="link pagination__page-link" to={`catalog/page_${page}`} onClick={(evt) => {
+                          setIsActivePage(page.toString());
+                          handlePageClick(evt);
+                        }}
+                        >{page}
+                        </Link>
+                      </li>
+                      :''))}
                   {isNextPage && guitarsForRendering !== undefined && guitarsForRendering?.length > CARDS_PER_PAGE*PAGENATION[PAGENATION.length-1]
-                    ? <NextPage isDeactivateNextPage={isDeactivateNextPage} onClick={handlePreviousNextPageClick} />
+                    ? <NextPage pageURL={pageURL} isDeactivateNextPage={isDeactivateNextPage} onClick={handlePreviousNextPageClick} />
                     : '' }
                 </ul>
               </div>

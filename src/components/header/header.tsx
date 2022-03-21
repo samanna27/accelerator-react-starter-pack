@@ -1,4 +1,4 @@
-import { ChangeEvent, MouseEvent, KeyboardEvent } from 'react';
+import { ChangeEvent, KeyboardEvent, MouseEvent } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { State } from '../../types/state';
 import { useState, useRef, useEffect} from 'react';
@@ -6,6 +6,7 @@ import { AppRoute } from '../../const';
 import { redirectToRoute } from '../../store/action';
 import { ThunkAppDispatch } from '../../types/action';
 import { store } from '../../index';
+import useComponentVisible from '../../hooks/useComponentVisible';
 
 const mapStateToProps = ({guitars}: State) => ({
   guitars,
@@ -19,9 +20,11 @@ type ConnectedComponentProps = PropsFromRedux;
 function Header({guitars}: ConnectedComponentProps): JSX.Element {
   const [searchList, setSearchList] = useState(['']);
   const searchTab = useRef<HTMLInputElement>(null);
+  const { ref, isComponentVisible, setIsComponentVisible } = useComponentVisible(true);
 
-  const handleSearchFieldChange = (evt: ChangeEvent<HTMLInputElement>) => {
+  const handleSearchFieldChange = (evt: ChangeEvent<HTMLInputElement>): void => {
     evt.preventDefault();
+    setIsComponentVisible(true);
     const similarGuitars = guitars.slice().map((guitar) => guitar.name.toLowerCase().indexOf(evt.target.value.toLowerCase()) === -1 ? '' : guitar.name).filter((name) => name !== '');
     setSearchList(similarGuitars);
   };
@@ -55,7 +58,7 @@ function Header({guitars}: ConnectedComponentProps): JSX.Element {
             </li>
           </ul>
         </nav>
-        <div className="form-search" style={{zIndex: '1000'}}>
+        <div className="form-search" style={{zIndex: '1000'}} ref={ref}>
           <form className="form-search__form">
             <button className="form-search__submit" type="submit">
               <svg className="form-search__icon" width="14" height="15" aria-hidden="true">
@@ -65,12 +68,13 @@ function Header({guitars}: ConnectedComponentProps): JSX.Element {
             <input className="form-search__input" id="search" type="text" autoComplete="off" placeholder="что вы ищите?" ref={searchTab} onChange={(evt) => handleSearchFieldChange(evt)}></input>
             <label className="visually-hidden" htmlFor="search">Поиск</label>
           </form>
-          <ul className={searchList[0] === '' ? 'form-search__select-list hidden' : 'form-search__select-list'}>
-            {searchList.map((guitar) =>(
-              <li key={guitar} className="form-search__select-item" tabIndex={0} style={{display: 'block', position: 'relative', zIndex: '1000', width: '100%'}} onClick={(evt) => handleGuitarOptionClick(evt)}>
-                {guitar}
-              </li>))}
-          </ul>
+          {isComponentVisible &&
+            <ul className={searchList[0] === '' ? 'form-search__select-list hidden' : 'form-search__select-list'}>
+              {searchList.map((guitar) =>(
+                <li key={guitar} className="form-search__select-item" tabIndex={0} style={{display: 'block', position: 'relative', zIndex: '1000', width: '100%'}} onClick={(evt) => handleGuitarOptionClick(evt)}>
+                  {guitar}
+                </li>))}
+            </ul>}
         </div>
         <a className="header__cart-link" href="#" aria-label="Корзина">
           <svg className="header__cart-icon" width="14" height="14" aria-hidden="true">
