@@ -39,7 +39,7 @@ export const GUITARS_TYPES_CHECKED = {
 
 export const PAGENATION = [1, 2, 3];
 
-export const CARDS_PER_PAGE = 9;
+export const CARDS_PER_PAGE = 5;
 
 export const START_CARD_INDEX = 0;
 
@@ -48,3 +48,5 @@ export const END_CARD_INDEX = 1;
 export const GUITAR_TYPE_CHECKED_FLAG = 1;
 
 export const GUITAR_TYPE_CHECKED_INDEX = 0;
+
+export const DEFAULT_PAGES = 3;

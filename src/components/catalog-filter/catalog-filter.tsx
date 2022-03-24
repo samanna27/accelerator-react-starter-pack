@@ -7,9 +7,13 @@ import { ThunkAppDispatch } from '../../types/action';
 import { GUITAR_TYPE, STRINGS_QUANTITY_BY_GUITAR, GUITAR_STRINGS, CARDS_PER_PAGE } from '../../const';
 import { nanoid } from 'nanoid';
 import { StringsChecked, Guitar } from '../../types/guitar';
+import { Filter } from '../../types/common';
 
 type CatalogFilterProps = {
   guitarsForRendering: Guitar[],
+  filter: Filter,
+  changeFilter: (fieldName: string) => (value: string) => void,
+  clearFilter: (filedName: string) => () => void,
 }
 
 const mapStateToProps =({minPriceFilter, maxPriceFilter, guitarType, cardsRendered, stringsQuantity}: State) => ({
@@ -25,7 +29,7 @@ const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>
 type ConnectedComponentProps = PropsFromRedux & CatalogFilterProps;
 
-function CatalogFilter({minPriceFilter, maxPriceFilter, guitarType, stringsQuantity, guitarsForRendering}: ConnectedComponentProps):JSX.Element {
+function CatalogFilter({minPriceFilter, maxPriceFilter, guitarType, stringsQuantity, guitarsForRendering, filter, changeFilter, clearFilter}: ConnectedComponentProps):JSX.Element {
   const minPrice =  Math.min(...guitarsForRendering.map((guitar) => guitar.price));
   const maxPrice = Math.max(...guitarsForRendering.map((guitar) => guitar.price));
   const minPriceRef = useRef<HTMLInputElement>(null);
