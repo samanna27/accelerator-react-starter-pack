@@ -41,13 +41,9 @@ export default function useFilterQuery<T extends Filter>(
   );
 
   const сhangeFilter = useCallback((fieldName: string) => (value: string) => {
-    //eslint-disable-next-line
-    console.log('oldFilter', filter);
     const newFilter = { ...filter, [fieldName]: value };
 
     setSearchQuery(newFilter);
-    //eslint-disable-next-line
-    console.log('newFilter', filter);
   },
   [filter, setSearchQuery],
   );

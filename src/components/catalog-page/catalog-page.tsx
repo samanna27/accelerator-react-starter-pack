@@ -8,16 +8,15 @@ import CatalogSort from '../catalog-sort/catalog-sort';
 import Header from '../header/header';
 import Footer from '../footer/footer';
 import { sortGuitarsPriceDown, sortGuitarsRatingDown, sortGuitarsPriceUp, sortGuitarsRatingUp } from '../../utils/common';
-// import { CARDS_PER_PAGE, END_CARD_INDEX, GUITARS_TYPES_CHECKED, START_CARD_INDEX, PAGENATION, DEFAULT_PAGES } from '../../const';
 import { CARDS_PER_PAGE, END_CARD_INDEX, GUITARS_TYPES_CHECKED, START_CARD_INDEX, GUITAR_TYPE_CHECKED_FLAG, GUITAR_TYPE_CHECKED_INDEX, PAGENATION, DEFAULT_PAGES } from '../../const';
-import { useState, SyntheticEvent, useEffect, useMemo } from 'react';
+import { useState, SyntheticEvent, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { store } from '../../index';
 import { updateCardsRendered } from '../../store/action';
 import { ThunkAppDispatch } from '../../types/action';
 import PreviousPage from './previous-page';
 import NextPage from './next-page';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import useFilterQuery from '../../hooks/useFilterQuery';
 
 const mapStateToProps = ({guitars, sortType, orderType, minPriceFilter, maxPriceFilter, guitarType, stringsQuantity, cardsRendered}: State) => ({
@@ -44,7 +43,6 @@ function CatalogPage({guitars, sortType, orderType, minPriceFilter, maxPriceFilt
   const [filter, changeFilter, clearFilter] = useFilterQuery();
   const pageURL: number = Math.round((cardsRendered[START_CARD_INDEX]+1)/CARDS_PER_PAGE+1);
   const history = useHistory();
-  const { search } = useLocation();
 
   useEffect(() => {
     setIsActivePage('1');
@@ -101,39 +99,11 @@ function CatalogPage({guitars, sortType, orderType, minPriceFilter, maxPriceFilt
   };
 
   const guitarsForRendering = getSortedAndOrderedGuitars()?.filter((guitar)=>(guitar.price >= minPriceFilter && guitar.price <= maxPriceFilter)).filter(filterByGuitarType).filter(filterByStringsQuantity);
-  const getObjectFromQueryString = (urlSearch: string) => {
-    const paramsEntries = new URLSearchParams(urlSearch).entries();
-    const currentFilter = Object.fromEntries(paramsEntries);
-    //eslint-disable-next-line
-    console.log('STEP2 - updating page', urlSearch, currentFilter);
-
-    return currentFilter;
-  };
-
-  const getGuitarsForRendering = useMemo(() => (() => {
-    const searchFilter = getObjectFromQueryString(search);
-    const pageString = searchFilter.pageCount;
-    const page = Number(pageString? pageString.substring(pageString.search('_')+1, pageString.length) : 1);
-
-    if(guitarsForRendering && guitarsForRendering.length > 0) {
-    // (store.dispatch as ThunkAppDispatch)(updateCardsRendered([(page-1)*CARDS_PER_PAGE, Math.min(page*CARDS_PER_PAGE, guitarsForRendering.length)]));}
-      setGuitarsFromTo([(page-1)*CARDS_PER_PAGE, Math.min(page*CARDS_PER_PAGE, guitarsForRendering.length)]);}
-
-    const guitarForCurrentPage = guitarsForRendering?.slice(guitarsFromTo[START_CARD_INDEX],guitarsFromTo[END_CARD_INDEX]);
-    //eslint-disable-next-line
-      console.log('STEP1 - updating page', search, searchFilter, pageString, page, cardsRendered, guitarForCurrentPage);
-
-    if(guitarForCurrentPage && guitarForCurrentPage.length > 0) {
-      return guitarForCurrentPage;}
-    return guitars.slice(cardsRendered[START_CARD_INDEX],cardsRendered[END_CARD_INDEX]);
-  }), [search]);
-
-  // const guitarsForRendering =
 
   const handlePreviousNextPageClick = (evt: SyntheticEvent<HTMLAnchorElement>) => {
     evt.preventDefault();
 
-    if(guitarsForRendering !== undefined) {
+    if(guitarsForRendering !== undefined){
       const guitarFrom = guitarsFromTo[START_CARD_INDEX];
       const guitarTo = guitarsFromTo[END_CARD_INDEX];
       const guitarsLength = guitarsForRendering.length;
@@ -178,7 +148,7 @@ function CatalogPage({guitars, sortType, orderType, minPriceFilter, maxPriceFilt
   const handlePageClick = (evt: SyntheticEvent<HTMLAnchorElement>) => {
     evt.preventDefault();
 
-    if(guitarsForRendering !== undefined) {
+    if(guitarsForRendering !== undefined){
       const guitarsLength = guitarsForRendering.length;
       const page = evt.currentTarget.textContent;
 
@@ -202,12 +172,13 @@ function CatalogPage({guitars, sortType, orderType, minPriceFilter, maxPriceFilt
   };
 
   useEffect(()=>{
-    const guitarTypesforUrlSearch = Object.entries(guitarType).filter((item)=>item[GUITAR_TYPE_CHECKED_FLAG] === true).map((item)=>item[GUITAR_TYPE_CHECKED_INDEX]).join(',');
-    const getURL = `?pageCount=catalog/page_${pageURL}${guitarTypesforUrlSearch.length > 0 ? `&type=${guitarTypesforUrlSearch}`:''}${stringsQuantity.length > 0 ? `&stringCount=${stringsQuantity.join(',')}`: ''}${ sortType.length > 0 ? `&sort=${sortType}`:''}${orderType.length > 0 ? `&order=${orderType}`: ''}`;
+    const guitarTypesforUrlSearch = Object.entries(guitarType).filter((item)=>item[GUITAR_TYPE_CHECKED_FLAG] === true).map((item)=>item[GUITAR_TYPE_CHECKED_INDEX]).join('type=');
+    const getURL = `?pageCount=catalog/page_${pageURL}${guitarTypesforUrlSearch.length > 0 ? `type=${guitarTypesforUrlSearch}`:''}${stringsQuantity.length > 0 ? `&stringCount=${stringsQuantity.join('stringCount=')}`: ''}${ sortType.length > 0 ? `&sort=${sortType}`:''}${orderType.length > 0 ? `&order=${orderType}`: ''}`;
     history.push({
       pathname: window.location.pathname,
       search: getURL,
     });
+
   },[guitarType, stringsQuantity, sortType, orderType, cardsRendered]);
 
   return(
@@ -228,8 +199,7 @@ function CatalogPage({guitars, sortType, orderType, minPriceFilter, maxPriceFilt
               <CatalogFilter guitarsForRendering={guitarsForRendering ? guitarsForRendering : guitars} filter={filter} changeFilter={changeFilter} clearFilter={clearFilter}/>
               <CatalogSort />
               <div className="cards catalog__cards">
-                {/* {guitarsForRendering?.slice(cardsRendered[START_CARD_INDEX],cardsRendered[END_CARD_INDEX]).map((guitar) => ( */}
-                {getGuitarsForRendering().map((guitar) => (
+                {guitarsForRendering?.slice(cardsRendered[START_CARD_INDEX],cardsRendered[END_CARD_INDEX]).map((guitar) => (
                   <ProductCard key={guitar.id} guitar={guitar} />
                 ))}
               </div>

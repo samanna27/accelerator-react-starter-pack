@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { SyntheticEvent, useEffect } from 'react';
+import { SyntheticEvent } from 'react';
 
 type NextPageProps = {
   onClick: (evt: SyntheticEvent<HTMLAnchorElement>) => void,
@@ -7,10 +7,6 @@ type NextPageProps = {
 }
 
 function NextPage({onClick, pageURL}: NextPageProps): JSX.Element {
-  useEffect(()=>{
-    //eslint-disable-next-line
-      console.log(pageURL);
-  }, []);
 
   return (
     <li className="pagination__page pagination__page--next" id="next" >
