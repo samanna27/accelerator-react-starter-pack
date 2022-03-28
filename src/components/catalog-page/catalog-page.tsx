@@ -161,16 +161,16 @@ function CatalogPage({guitars, sortType, orderType, minPriceFilter, maxPriceFilt
       }
     }
 
-    if(filter['minPrice'] && minPriceFilter !== +filter['minPrice']){
+    if(filter['minPrice'] !== undefined && minPriceFilter !== +filter['minPrice']){
       let value = +filter['minPrice'];
       if(filter['type'] || filter['sort']) {
         const minPriceForCheckedTypeAndString = guitarsFilteredByTypeAndStrings ? Math.min(...guitarsFilteredByTypeAndStrings.map((guitar) => guitar.price)) : Math.min(...guitars.map((guitar) => guitar.price));
-        value = Math.min(value, minPriceForCheckedTypeAndString);
+        value = Math.max(value, minPriceForCheckedTypeAndString);
       }
       (store.dispatch as ThunkAppDispatch)(updateMinPriceFilter(value));
     }
 
-    if(filter['maxPrice'] && maxPriceFilter !== +filter['maxPrice']){
+    if(filter['maxPrice'] !== undefined && maxPriceFilter !== +filter['maxPrice']){
       let value = +filter['maxPrice'];
       if(filter['type'] || filter['sort']) {
         const maxPriceForCheckedTypeAndString = guitarsFilteredByTypeAndStrings ? Math.max(...guitarsFilteredByTypeAndStrings.map((guitar) => guitar.price)) : Math.max(...guitars.map((guitar) => guitar.price));

@@ -48,14 +48,14 @@ function CatalogFilter({minPriceFilter, maxPriceFilter, guitarType, stringsQuant
 
   useEffect(() => {
     setIsMinPrice(minPriceFilter.toLocaleString());
-    if(minPriceFilter !== 0 && minPriceFilter !== minPrice && minPriceRef.current && minPriceRef.current.value === ''){
+    if(minPriceFilter !== 0 && minPriceFilter !== minPrice && minPriceRef.current && minPriceRef.current.value === '0'){
       minPriceRef.current.placeholder = minPriceFilter.toLocaleString();
     }
   }, [minPriceFilter]);
 
   useEffect(() => {
     setIsMaxPrice(maxPriceFilter.toLocaleString());
-    if(maxPriceFilter !== 0 && maxPriceFilter !== maxPrice && maxPriceRef.current && maxPriceRef.current.value === ''){
+    if(maxPriceFilter !== 0 && maxPriceFilter !== maxPrice && maxPriceRef.current && maxPriceRef.current.value === '0'){
       maxPriceRef.current.placeholder = maxPriceFilter.toLocaleString();
     }
   }, [maxPriceFilter]);
@@ -79,17 +79,17 @@ function CatalogFilter({minPriceFilter, maxPriceFilter, guitarType, stringsQuant
   }, [guitarType]);
 
   useEffect(() => {
-    if(minPriceRef.current && minPriceRef.current.value !== '' && Number(minPriceRef.current.value) < minPriceGuitarsRendered) {
+    if(minPriceRef.current && minPriceRef.current.value !== '0' && Number(minPriceRef.current.value) < minPriceGuitarsRendered && minPriceFilter !== 0) {
       if(minPriceGuitarsRendered > maxPriceFilter) {
         toast.info(FAIL_MESSAGE);
         minPriceRef.current.value = maxPriceFilter.toString();
       } else {
-        minPriceRef.current.value = minPriceGuitarsRendered.toString();
+        minPriceRef.current.value = minPriceGuitarsRendered.toLocaleString();
         (store.dispatch as ThunkAppDispatch)(updateMinPriceFilter(minPriceGuitarsRendered));
       }
     }
 
-    if(maxPriceRef.current && maxPriceRef.current.value !== '' && Number(maxPriceRef.current.value) > maxPriceGuitarsRendered) {
+    if(maxPriceRef.current && maxPriceRef.current.value !== '0' && Number(maxPriceRef.current.value) > maxPriceGuitarsRendered && minPriceFilter !== 0) {
       if(maxPriceGuitarsRendered < minPriceFilter) {
         toast.info(FAIL_MESSAGE);
         maxPriceRef.current.value = minPriceFilter.toString();
@@ -112,9 +112,9 @@ function CatalogFilter({minPriceFilter, maxPriceFilter, guitarType, stringsQuant
     const value = Math.max(minPriceGuitarsRendered, Math.min(maxPriceGuitarsRendered, Number(evt.target.value)));
 
     if(evt.target.id === 'priceMin' ){
-      if(minPriceRef.current !== null && Number(minPriceRef.current.value) > maxPriceFilter && minPriceRef.current.value !== '')  {
+      if(minPriceRef.current !== null && Number(minPriceRef.current.value) > maxPriceFilter && minPriceRef.current.value !== '0')  {
         minPriceRef.current.value = maxPriceFilter.toString();
-      } else if (minPriceRef.current !== null && minPriceRef.current.value === '') {
+      } else if (minPriceRef.current !== null && minPriceRef.current.value === '0') {
         minPriceRef.current.value = minPriceGuitarsRendered.toString();
       } else if (minPriceRef.current !== null) {
         minPriceRef.current.value = value.toString();
@@ -125,9 +125,9 @@ function CatalogFilter({minPriceFilter, maxPriceFilter, guitarType, stringsQuant
     }
 
     if(evt.target.id === 'priceMax' ){
-      if(maxPriceRef.current !== null && Number(maxPriceRef.current.value) < minPriceFilter && maxPriceRef.current.value !== '') {
+      if(maxPriceRef.current !== null && Number(maxPriceRef.current.value) < minPriceFilter && maxPriceRef.current.value !== '0') {
         maxPriceRef.current.value = minPriceFilter.toString();
-      } else if (maxPriceRef.current !== null && maxPriceRef.current.value === '') {
+      } else if (maxPriceRef.current !== null && maxPriceRef.current.value === '0') {
         maxPriceRef.current.value = maxPriceGuitarsRendered.toString();
       } else if (maxPriceRef.current !== null) {
         maxPriceRef.current.value = value.toString();
