@@ -21,6 +21,7 @@ function CatalogSort({sortType, orderType}: ConnectedComponentProps): JSX.Elemen
     if(evt.currentTarget.textContent !==null) {
       (store.dispatch as ThunkAppDispatch)(changeSortType(evt.currentTarget.textContent));}
   };
+
   const hadleOrderTypeButtonClick =(order: string) => {
     if(order !==null) {
       (store.dispatch as ThunkAppDispatch)(changeOrderType(order));}

@@ -1,5 +1,5 @@
 import { useMemo, useCallback } from 'react';
-import { useHistory, useLocation } from 'react-router';
+import { useNavigate, useLocation } from 'react-router';
 import { omit } from 'lodash-es';
 import { Filter } from '../types/common';
 
@@ -21,7 +21,7 @@ export default function useFilterQuery<T extends Filter>(
   getSearchQuery?: (filter: Filter) => string,
 ): useFilterQueryTypes {
   const { search } = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const filter = useMemo(() =>
     // используем функцию переданную через параметры или дефолтную
@@ -35,9 +35,9 @@ export default function useFilterQuery<T extends Filter>(
       ? getSearchQuery(filterArg)
       : getQueryStringFromObject(filterArg).toString();
 
-    history.push(urlSearch);
+    navigate(urlSearch);
   },
-  [history, getSearchQuery],
+  [navigate, getSearchQuery],
   );
 
   const сhangeFilter = useCallback((fieldName: string) => (value: string) => {
