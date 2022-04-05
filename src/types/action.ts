@@ -17,7 +17,8 @@ import {
   setMaxPriceFilter,
   updateGuitarTypeFilter,
   updateStringsTypeFilter,
-  updateCardsRendered
+  updateCardsRendered,
+  updateCommentsRendered
 } from '../store/action';
 
 export enum ActionType {
@@ -30,7 +31,8 @@ export enum ActionType {
   SetMaxPriceFilter = 'data/setMaxPriceFilter',
   UpdateGuitarTypeFilter = 'data/updateGuitarTypeFilter',
   UpdateStringsTypeFilter = 'data/updateStringsTypeFilter',
-  UpdateCardsRendered = 'data/updateCardsRendered'
+  UpdateCardsRendered = 'data/updateCardsRendered',
+  UpdateCommentsRendered = 'data/updateCommentsRendered'
 }
 
 export type Actions =
@@ -43,7 +45,8 @@ export type Actions =
  | ReturnType<typeof setMaxPriceFilter>
  | ReturnType<typeof updateGuitarTypeFilter>
  | ReturnType<typeof updateStringsTypeFilter>
- | ReturnType<typeof updateCardsRendered>;
+ | ReturnType<typeof updateCardsRendered>
+ | ReturnType<typeof updateCommentsRendered>;
 
 export type ThunkActionResult<R = Promise<void>> = ThunkAction<R, State, AxiosInstance, Actions>;
 

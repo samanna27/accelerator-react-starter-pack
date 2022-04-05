@@ -15,6 +15,7 @@ const initialState = {
   stringsQuantity: [],
   cardsRendered: [0, CARDS_PER_PAGE],
   isDataLoaded: false,
+  commentsRendered: 3,
 };
 
 const reducer = (state: State = initialState, action: Actions): State => {
@@ -26,7 +27,12 @@ const reducer = (state: State = initialState, action: Actions): State => {
     case ActionType.LoadGuitarComments: {
       const allGuitarsComments = state.allGuitarsComments.slice();
       const id = action.payload.guitarId;
-      allGuitarsComments.push([id, action.payload.guitarComments]);
+      if(allGuitarsComments.map((item) => item[0]).includes(id)){
+        const elementToReplace = allGuitarsComments.findIndex((element) => element[0] === id);
+        allGuitarsComments[elementToReplace][1] = action.payload.guitarComments;
+      } else {
+        allGuitarsComments.push([id, action.payload.guitarComments]);
+      }
       return {...state, allGuitarsComments};
     }
     case ActionType.ChangeSortType: {
@@ -59,6 +65,10 @@ const reducer = (state: State = initialState, action: Actions): State => {
     case ActionType.UpdateCardsRendered: {
       const cardsRendered = action.payload;
       return {...state, cardsRendered};
+    }
+    case ActionType.UpdateCommentsRendered: {
+      const commentsRendered = action.payload;
+      return {...state, commentsRendered};
     }
     default:
       return state;

@@ -23,6 +23,12 @@ export const GUITAR_TYPE: GuitarType = {
   'ukulele': 'Укулеле',
 };
 
+export const GUITAR_TYPE_SINGLE: GuitarType = {
+  'acoustic': 'Акустические гитара',
+  'electric': 'Электрогитара',
+  'ukulele': 'Укулеле',
+};
+
 export const STRINGS_QUANTITY_BY_GUITAR: StringsByGuitarType = {
   'acoustic': [6,7,12],
   'electric': [4,6,7],
@@ -50,3 +56,7 @@ export const GUITAR_TYPE_CHECKED_FLAG = 1;
 export const GUITAR_TYPE_CHECKED_INDEX = 0;
 
 export const DEFAULT_PAGES = 3;
+
+export const CHARACTERISTICS = ['Характеристики','Описание'];
+
+export const COMMENTS_SHOW_PER_CLICK = 3;

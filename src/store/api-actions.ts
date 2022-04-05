@@ -38,3 +38,13 @@ export const fetchCommentsDataAction = (id: number): ThunkActionResult =>
         }
       });
   };
+
+// export const fetchSelectedGuitarDataAction = (pathname: string): ThunkActionResult =>
+//   async (dispatch, _getState, api): Promise<void> => {
+//     await api.get<Guitar>(pathname)
+//       .then((data) => {
+//         if(data.status === OK_CODE){
+//           dispatch(loadGuitar(data.data));
+//         }
+//       });
+//   };

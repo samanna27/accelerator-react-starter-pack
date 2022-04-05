@@ -56,3 +56,8 @@ export const updateCardsRendered = (cardsRendered: number[]) => ({
   type: ActionType.UpdateCardsRendered,
   payload: cardsRendered,
 } as const);
+
+export const updateCommentsRendered = (commentsRendered: number) => ({
+  type: ActionType.UpdateCommentsRendered,
+  payload: commentsRendered,
+} as const);

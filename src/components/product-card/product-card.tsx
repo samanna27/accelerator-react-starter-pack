@@ -7,6 +7,7 @@ import { store } from '../../index';
 import { connect, ConnectedProps } from 'react-redux';
 import { State } from '../../types/state';
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 type ProductCardProps = {
   guitar: Guitar;
@@ -24,6 +25,7 @@ type ConnectedComponentProps = PropsFromRedux & ProductCardProps;
 
 function ProductCard({guitar, allGuitarsComments}: ConnectedComponentProps): JSX.Element {
   const exit = '';
+
   useEffect(() => {
     if(guitar !== null) {
       (store.dispatch as ThunkAppDispatch)(fetchCommentsDataAction(guitar.id));
@@ -58,7 +60,7 @@ function ProductCard({guitar, allGuitarsComments}: ConnectedComponentProps): JSX
           <p className="product-card__price"><span className="visually-hidden">Цена:</span>{price.toLocaleString('ru-RU')} ₽
           </p>
         </div>
-        <div className="product-card__buttons"><a className="button button--mini" href="#">Подробнее</a><a className="button button--red button--mini button--add-to-cart" href="#">Купить</a>
+        <div className="product-card__buttons"><Link className="button button--mini" to={`/guitars/${id}`}>Подробнее</Link><a className="button button--red button--mini button--add-to-cart" href="#">Купить</a>
         </div>
       </div>
     );

@@ -12,4 +12,5 @@ export type State = {
   stringsQuantity: number[],
   cardsRendered: number[],
   isDataLoaded: boolean,
+  commentsRendered: number,
 };

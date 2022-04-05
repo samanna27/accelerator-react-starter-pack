@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 const getWeightRatingDown = (dateA, dateB) => {
   if (dateA === null && dateB === null) {
     return 0;
@@ -35,4 +37,14 @@ export const sortGuitarsRatingDown = (guitarA, guitarB) => {
   }
 
   return (guitarB.rating-guitarA.rating);
+};
+
+export const sortCommentsDateDown = (commentA, commentB) => {
+  const weight = getWeightRatingDown(commentA.createAt, commentB.createAt);
+
+  if (weight !== null) {
+    return weight;
+  }
+
+  return dayjs(commentB.createAt).diff(dayjs(commentA.createAt));
 };
