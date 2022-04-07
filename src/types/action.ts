@@ -18,7 +18,8 @@ import {
   updateGuitarTypeFilter,
   updateStringsTypeFilter,
   updateCardsRendered,
-  updateCommentsRendered
+  updateCommentsRendered,
+  addComment
 } from '../store/action';
 
 export enum ActionType {
@@ -32,7 +33,8 @@ export enum ActionType {
   UpdateGuitarTypeFilter = 'data/updateGuitarTypeFilter',
   UpdateStringsTypeFilter = 'data/updateStringsTypeFilter',
   UpdateCardsRendered = 'data/updateCardsRendered',
-  UpdateCommentsRendered = 'data/updateCommentsRendered'
+  UpdateCommentsRendered = 'data/updateCommentsRendered',
+  AddComment = 'data/addComment'
 }
 
 export type Actions =
@@ -46,7 +48,8 @@ export type Actions =
  | ReturnType<typeof updateGuitarTypeFilter>
  | ReturnType<typeof updateStringsTypeFilter>
  | ReturnType<typeof updateCardsRendered>
- | ReturnType<typeof updateCommentsRendered>;
+ | ReturnType<typeof updateCommentsRendered>
+ | ReturnType<typeof addComment>;
 
 export type ThunkActionResult<R = Promise<void>> = ThunkAction<R, State, AxiosInstance, Actions>;
 

@@ -61,3 +61,8 @@ export const updateCommentsRendered = (commentsRendered: number) => ({
   type: ActionType.UpdateCommentsRendered,
   payload: commentsRendered,
 } as const);
+
+export const addComment = (newComment: Comment) => ({
+  type: ActionType.AddComment,
+  payload: newComment,
+} as const);

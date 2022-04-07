@@ -22,6 +22,15 @@ export type Comment = {
   guitarId: number;
 };
 
+export type CommentPost = {
+  userName: string;
+  advantage: string;
+  disadvantage: string;
+  comment: string;
+  rating: number;
+  guitarId: number;
+};
+
 type GuitarsComments = [number, Comment[]];
 
 export type AllGuitarComments = GuitarsComments[];

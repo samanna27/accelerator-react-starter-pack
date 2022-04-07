@@ -70,6 +70,18 @@ const reducer = (state: State = initialState, action: Actions): State => {
       const commentsRendered = action.payload;
       return {...state, commentsRendered};
     }
+    case ActionType.AddComment: {
+      const allGuitarsComments = state.allGuitarsComments.slice();
+      const id = action.payload.guitarId;
+      if(allGuitarsComments.map((item) => item[0]).includes(id)){
+        const elementToAddNewComment = allGuitarsComments.findIndex((element) => element[0] === id);
+        allGuitarsComments[elementToAddNewComment][1].push(action.payload);
+      } else {
+        const comments = new Array(action.payload);
+        allGuitarsComments.push([id, comments]);
+      }
+      return {...state, allGuitarsComments};
+    }
     default:
       return state;
   }

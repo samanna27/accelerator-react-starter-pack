@@ -2,10 +2,6 @@ import { ChangeEvent, KeyboardEvent, MouseEvent } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { State } from '../../types/state';
 import { useState, useRef, useEffect} from 'react';
-// import { AppRoute } from '../../const';
-// import { redirectToRoute } from '../../store/action';
-// import { ThunkAppDispatch } from '../../types/action';
-// import { store } from '../../index';
 import useComponentVisible from '../../hooks/useComponentVisible';
 import { useNavigate } from 'react-router';
 
@@ -41,10 +37,7 @@ function Header({guitars}: ConnectedComponentProps): JSX.Element {
     setSearchList(['']);
     const searchedGuitarName = evt.currentTarget.innerText;
     const searchedGuitarId = guitars.find((guitar) => guitar.name === searchedGuitarName)?.id;
-    //eslint-disable-next-line
-    console.log('redirecting to guitar page', searchedGuitarId);
     navigate(`/guitars/${searchedGuitarId}`);
-    // (store.dispatch as ThunkAppDispatch)(redirectToRoute(AppRoute.Guitar));
   };
 
   return (

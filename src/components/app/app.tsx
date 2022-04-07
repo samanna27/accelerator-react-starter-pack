@@ -33,7 +33,7 @@ function App(props: ConnectedComponentProps): JSX.Element {
         </Route>
         <Route path={AppRoute.Guitar} element={<GuitarPage />}>
         </Route>
-        <Route element={<NotFoundScreen />}>
+        <Route path='*' element={<NotFoundScreen />}>
         </Route>
       </Routes>
     </BrowserRouter>

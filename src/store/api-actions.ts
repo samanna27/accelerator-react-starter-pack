@@ -3,13 +3,15 @@ import {
   loadGuitars,
   loadGuitarComments,
   updateMinPriceFilter,
-  setMaxPriceFilter
+  setMaxPriceFilter,
+  addComment
 } from './action';
-import { APIRoute, OK_CODE } from '../const';
-import { Guitar, Comment } from '../types/guitar';
+import { APIRoute, OK_CODE, OK_CODE_TOP_RANGE } from '../const';
+import { Guitar, Comment, CommentPost } from '../types/guitar';
 import {toast} from 'react-toastify';
 
 const FAIL_MESSAGE = 'Сервер недоступен';
+const COMMENT_POST_FAIL_MESSAGE = 'Ваш комментарий не был отправлен. Попробуйте еще раз.';
 
 export const fetchProductsAction = (): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
@@ -39,12 +41,16 @@ export const fetchCommentsDataAction = (id: number): ThunkActionResult =>
       });
   };
 
-// export const fetchSelectedGuitarDataAction = (pathname: string): ThunkActionResult =>
-//   async (dispatch, _getState, api): Promise<void> => {
-//     await api.get<Guitar>(pathname)
-//       .then((data) => {
-//         if(data.status === OK_CODE){
-//           dispatch(loadGuitar(data.data));
-//         }
-//       });
-//   };
+export const fetchPostReviewAction = (newComment: CommentPost): ThunkActionResult =>
+  async (dispatch, _getState, api) => {
+    try {
+      await api.post<Comment>('/comments', newComment)
+        .then((data) => {
+          if(data.status >= OK_CODE && data.status <= OK_CODE_TOP_RANGE) {
+            dispatch(addComment(data.data));
+          }
+        });
+    } catch {
+      toast.info(COMMENT_POST_FAIL_MESSAGE);
+    }
+  };

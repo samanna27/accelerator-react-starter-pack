@@ -17,7 +17,10 @@ import { store } from '../../index';
 import { sortCommentsDateDown } from '../../utils/common';
 import { Comment } from '../../types/guitar';
 import { Link } from 'react-router-dom';
-import useClickOutside from '../../hooks/useClickOutside';
+import useComponentVisible from '../../hooks/useComponentVisible';
+import PopupForm from '../popup-form/popup-form';
+import ReviewSentModal from '../review-sent-modal/review-sent-modal';
+import { useNavigate } from 'react-router';
 
 dayjs.extend(localeData);
 dayjs.locale('ru');
@@ -40,7 +43,10 @@ function GuitarPage({guitars, allGuitarsComments, commentsRendered}: ConnectedCo
   const exit = '';
   const [characteristic, setCharacteristic] = useState<string>(CHARACTERISTICS[0]);
   const [showMoreFlag, setShowMoreFlag] = useState<boolean>(true);
-  const {ref} = useClickOutside(true);
+  const [isReviewPopupVisible, setIsReviewPopupVisible] = useState<boolean>(false);
+  const [isReviewSentModalVisible, setIsReviewSentModalVisible] = useState<boolean>(false);
+  const { refPopup, refReviewSent, isComponentVisible, setIsComponentVisible } = useComponentVisible(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if(![...allGuitarsComments].slice().map((item)=>item[0]).includes(productId)){
@@ -52,7 +58,15 @@ function GuitarPage({guitars, allGuitarsComments, commentsRendered}: ConnectedCo
     (store.dispatch as ThunkAppDispatch)(updateCommentsRendered(COMMENTS_SHOW_PER_CLICK));
   }, [params]);
 
+  useEffect(() => {
+    const body = document.querySelector('body');
+    if(body !== null){
+      body.style.overflow = (isReviewPopupVisible || isReviewSentModalVisible) && isComponentVisible ? 'hidden' : 'auto';
+    }
+  }, [isReviewPopupVisible, isReviewSentModalVisible, isComponentVisible]);
+
   if(product === null || product === undefined) {
+    navigate('*');
     return <div>{exit}</div>;
   } else {
     const {id, name, previewImg, rating, type, stringCount, vendorCode, price, description} = product;
@@ -60,7 +74,8 @@ function GuitarPage({guitars, allGuitarsComments, commentsRendered}: ConnectedCo
     const starRange = (rating !== 0 ? new Array(MAX_STAR_RATING).fill(0).fill(1, 0, Math.floor(rating)): null);
     const comments: Comment[] | undefined = [...allGuitarsComments].slice().find((guitarComments) => guitarComments[0] === id)?.[1].sort(sortCommentsDateDown);
 
-    const handleShowMoreButtonClick = () => {
+    const handleShowMoreButtonClick = (evt: MouseEvent<HTMLButtonElement>) => {
+      evt.preventDefault();
       if(comments !== undefined && commentsRendered !== comments.length){
         const commentsRenderedQuantity: number = commentsRendered + Math.min(COMMENTS_SHOW_PER_CLICK, (comments.length-commentsRendered));
         (store.dispatch as ThunkAppDispatch)(updateCommentsRendered(commentsRenderedQuantity));
@@ -70,19 +85,16 @@ function GuitarPage({guitars, allGuitarsComments, commentsRendered}: ConnectedCo
       }
     };
 
-    // const handleUpButtonClick = (evt: MouseEvent<HTMLAnchorElement>) => {
-    //   evt.preventDefault();
-    //   //eslint-disable-next-line
-    //   console.log(goTopButtonRef.current, evt.currentTarget)
-    //   if(goTopButtonRef.current && goTopButtonRef.current === evt.currentTarget) {
-    //     window.scrollTo(0, 0);
-    //   }
-    // };
+    const handleUpButtonClick = (evt: MouseEvent<HTMLAnchorElement>) => {
+      evt.preventDefault();
+      window.scrollTo(0, 0);
+    };
 
     const handleAddReviewClick = (evt: MouseEvent<HTMLAnchorElement>) => {
       evt.preventDefault();
-      //eslint-disable-next-line
-      console.log('сейчас будем добавлять отзыв')
+      setIsReviewPopupVisible(true);
+      setIsComponentVisible(true);
+      setIsReviewSentModalVisible(false);
     };
 
     return (
@@ -184,13 +196,14 @@ function GuitarPage({guitars, allGuitarsComments, commentsRendered}: ConnectedCo
                 {comments !== undefined && comments?.length <= 3
                   ? ''
                   : showMoreFlag && <button className="button button--medium reviews__more-button" onClick={handleShowMoreButtonClick}>Показать еще отзывы</button>}
-                <a className="button button--up button--red-border button--big reviews__up-button" ref={ref} href="#">Наверх</a>
-                {/* <a className="button button--up button--red-border button--big reviews__up-button" onClick={handleUpButtonClick} href="#">Наверх</a> */}
+                <a className="button button--up button--red-border button--big reviews__up-button" style={{bottom: '0px'}} onClick={handleUpButtonClick} href="#">Наверх</a>
               </section>
             </div>
           </main>
           <Footer />
         </div>
+        {isComponentVisible && isReviewPopupVisible && <PopupForm guitarName={name} refPopup={refPopup} setIsComponentVisible={setIsComponentVisible} setIsReviewPopupVisible={setIsReviewPopupVisible} setIsReviewSentModalVisible={setIsReviewSentModalVisible} guitarId={productId} />}
+        {isComponentVisible && isReviewSentModalVisible && <ReviewSentModal id={id} refReviewSent={refReviewSent} setIsComponentVisible={setIsComponentVisible} setIsReviewSentModalVisible={setIsReviewSentModalVisible} setIsReviewPopupVisible={setIsReviewPopupVisible}/>}
       </>
     );
   }}
