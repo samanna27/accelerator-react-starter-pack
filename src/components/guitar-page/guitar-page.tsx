@@ -20,7 +20,9 @@ import { Link } from 'react-router-dom';
 import useComponentVisible from '../../hooks/useComponentVisible';
 import PopupForm from '../popup-form/popup-form';
 import ReviewSentModal from '../review-sent-modal/review-sent-modal';
+import ModalCartAdd from '../modal-cart-add/modal-cart-add';
 import { useNavigate } from 'react-router';
+import { useInView } from 'react-intersection-observer';
 
 dayjs.extend(localeData);
 dayjs.locale('ru');
@@ -40,13 +42,28 @@ function GuitarPage({guitars, allGuitarsComments, commentsRendered}: ConnectedCo
   const params = useParams();
   const productId = Number(params.id);
   const product = guitars.slice().find((element) => element.id === productId);
+  const comments: Comment[] | undefined = [...allGuitarsComments].slice().find((guitarComments) => guitarComments[0] === productId)?.[1].sort(sortCommentsDateDown);
   const exit = '';
   const [characteristic, setCharacteristic] = useState<string>(CHARACTERISTICS[0]);
   const [showMoreFlag, setShowMoreFlag] = useState<boolean>(true);
   const [isReviewPopupVisible, setIsReviewPopupVisible] = useState<boolean>(false);
   const [isReviewSentModalVisible, setIsReviewSentModalVisible] = useState<boolean>(false);
+  const [isModalCartAddVisible, setIsModalCartAddVisible] = useState<boolean>(false);
   const { refPopup, refReviewSent, isComponentVisible, setIsComponentVisible } = useComponentVisible(true);
+  const { ref, inView } = useInView({
+    threshold: 0,
+  });
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if(comments !== undefined && commentsRendered !== comments.length){
+      const commentsRenderedQuantity: number = commentsRendered + Math.min(COMMENTS_SHOW_PER_CLICK, (comments.length-commentsRendered));
+      (store.dispatch as ThunkAppDispatch)(updateCommentsRendered(commentsRenderedQuantity));
+      if(commentsRenderedQuantity >= comments.length) {
+        setShowMoreFlag(false);
+      }
+    }
+  }, [inView]);
 
   useEffect(() => {
     if(![...allGuitarsComments].slice().map((item)=>item[0]).includes(productId)){
@@ -72,8 +89,6 @@ function GuitarPage({guitars, allGuitarsComments, commentsRendered}: ConnectedCo
     const {id, name, previewImg, rating, type, stringCount, vendorCode, price, description} = product;
     const imageAddress = `../img/content${previewImg.substring(previewImg.indexOf('/'))}`;
     const starRange = (rating !== 0 ? new Array(MAX_STAR_RATING).fill(0).fill(1, 0, Math.floor(rating)): null);
-    const comments: Comment[] | undefined = [...allGuitarsComments].slice().find((guitarComments) => guitarComments[0] === id)?.[1].sort(sortCommentsDateDown);
-
     const handleShowMoreButtonClick = (evt: MouseEvent<HTMLButtonElement>) => {
       evt.preventDefault();
       if(comments !== undefined && commentsRendered !== comments.length){
@@ -95,6 +110,11 @@ function GuitarPage({guitars, allGuitarsComments, commentsRendered}: ConnectedCo
       setIsReviewPopupVisible(true);
       setIsComponentVisible(true);
       setIsReviewSentModalVisible(false);
+    };
+
+    const handleAddToCartClick = (evt: MouseEvent<HTMLAnchorElement>) => {
+      evt.preventDefault();
+      setIsModalCartAddVisible(true);
     };
 
     return (
@@ -164,7 +184,7 @@ function GuitarPage({guitars, allGuitarsComments, commentsRendered}: ConnectedCo
                 <div className="product-container__price-wrapper">
                   <p className="product-container__price-info product-container__price-info--title">Цена:</p>
                   <p className="product-container__price-info product-container__price-info--value">{price.toLocaleString('ru-RU')} ₽</p>
-                  <a className="button button--red button--big product-container__button" href="#">Добавить в корзину</a>
+                  <a className="button button--red button--big product-container__button" href="#" onClick={handleAddToCartClick} >Добавить в корзину</a>
                 </div>
               </div>
               <section className="reviews">
@@ -202,8 +222,10 @@ function GuitarPage({guitars, allGuitarsComments, commentsRendered}: ConnectedCo
           </main>
           <Footer />
         </div>
+        <div ref={ref}></div>
         {isComponentVisible && isReviewPopupVisible && <PopupForm guitarName={name} refPopup={refPopup} setIsComponentVisible={setIsComponentVisible} setIsReviewPopupVisible={setIsReviewPopupVisible} setIsReviewSentModalVisible={setIsReviewSentModalVisible} guitarId={productId} />}
         {isComponentVisible && isReviewSentModalVisible && <ReviewSentModal id={id} refReviewSent={refReviewSent} setIsComponentVisible={setIsComponentVisible} setIsReviewSentModalVisible={setIsReviewSentModalVisible} setIsReviewPopupVisible={setIsReviewPopupVisible}/>}
+        {isModalCartAddVisible && <ModalCartAdd setIsComponentVisible={setIsComponentVisible} setIsModalCartAddVisible={setIsModalCartAddVisible}/>}
       </>
     );
   }}
