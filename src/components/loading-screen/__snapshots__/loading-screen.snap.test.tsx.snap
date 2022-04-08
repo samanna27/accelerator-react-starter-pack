@@ -1,0 +1,86 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Component: LoadingScreen should render correctly 1`] = `
+<div>
+  <div
+    style="display: flex; justify-content: center; align-self: center; align-content: center; min-height: 100vh; align-items: center;"
+  >
+    <div
+      data-testid="puff-loading"
+      style="display: flex;"
+    >
+      <svg
+        aria-label="puff-loading"
+        data-testid="puff-svg"
+        height="500"
+        stroke="#00BFFF"
+        viewBox="0 0 44 44"
+        width="500"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <g
+          fill="none"
+          fill-rule="evenodd"
+          stroke-width="2"
+        >
+          <circle
+            cx="22"
+            cy="22"
+            r="1"
+          >
+            <animate
+              attributeName="r"
+              begin="0s"
+              calcMode="spline"
+              dur="1.8s"
+              keySplines="0.165, 0.84, 0.44, 1"
+              keyTimes="0; 1"
+              repeatCount="indefinite"
+              values="1; 20"
+            />
+            <animate
+              attributeName="strokeOpacity"
+              begin="0s"
+              calcMode="spline"
+              dur="1.8s"
+              keySplines="0.3, 0.61, 0.355, 1"
+              keyTimes="0; 1"
+              repeatCount="indefinite"
+              values="1; 0"
+            />
+          </circle>
+          <circle
+            cx="22"
+            cy="22"
+            r="1"
+          >
+            <animate
+              attributeName="r"
+              begin="-0.9s"
+              calcMode="spline"
+              dur="1.8s"
+              keySplines="0.165, 0.84, 0.44, 1"
+              keyTimes="0; 1"
+              repeatCount="indefinite"
+              values="1; 20"
+            />
+            <animate
+              attributeName="strokeOpacity"
+              begin="-0.9s"
+              calcMode="spline"
+              dur="1.8s"
+              keySplines="0.3, 0.61, 0.355, 1"
+              keyTimes="0; 1"
+              repeatCount="indefinite"
+              values="1; 0"
+            />
+          </circle>
+        </g>
+      </svg>
+    </div>
+  </div>
+  <div
+    class="your-loader"
+  />
+</div>
+`;

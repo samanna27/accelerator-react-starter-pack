@@ -215,8 +215,8 @@ function GuitarPage({guitars, allGuitarsComments, commentsRendered}: ConnectedCo
                   ))}
                 {comments !== undefined && comments?.length <= 3
                   ? ''
-                  : showMoreFlag && <button className="button button--medium reviews__more-button" onClick={handleShowMoreButtonClick}>Показать еще отзывы</button>}
-                <a className="button button--up button--red-border button--big reviews__up-button" style={{bottom: '0px'}} onClick={handleUpButtonClick} href="#">Наверх</a>
+                  : showMoreFlag && <button className="button button--medium reviews__more-button" style={{ zIndex: '1000'}} onClick={handleShowMoreButtonClick}>Показать еще отзывы</button>}
+                <a className="button button--up button--red-border button--big reviews__up-button" style={{ zIndex: '1000'}} onClick={handleUpButtonClick} href="#">Наверх</a>
               </section>
             </div>
           </main>

@@ -10,7 +10,6 @@ export type Guitar = {
   price: number;
 };
 
-
 export type Comment = {
   id: number;
   userName: string;

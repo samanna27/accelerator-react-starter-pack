@@ -19,7 +19,8 @@ import {
   updateStringsTypeFilter,
   updateCardsRendered,
   updateCommentsRendered,
-  addComment
+  addComment,
+  UNKNOWN_ACTION
 } from '../store/action';
 
 export enum ActionType {
@@ -49,7 +50,8 @@ export type Actions =
  | ReturnType<typeof updateStringsTypeFilter>
  | ReturnType<typeof updateCardsRendered>
  | ReturnType<typeof updateCommentsRendered>
- | ReturnType<typeof addComment>;
+ | ReturnType<typeof addComment>
+ | ReturnType<typeof UNKNOWN_ACTION>;
 
 export type ThunkActionResult<R = Promise<void>> = ThunkAction<R, State, AxiosInstance, Actions>;
 

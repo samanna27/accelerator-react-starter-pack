@@ -66,3 +66,7 @@ export const addComment = (newComment: Comment) => ({
   type: ActionType.AddComment,
   payload: newComment,
 } as const);
+
+export const UNKNOWN_ACTION = () => ({
+  type: UNKNOWN_ACTION,
+} as const);

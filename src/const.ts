@@ -7,6 +7,7 @@ export enum AppRoute {
 
 export enum APIRoute {
   Guitars = '/guitars',
+  Comment = '/comments',
 }
 
 export const MAX_STAR_RATING = 5;

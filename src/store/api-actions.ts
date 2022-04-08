@@ -44,7 +44,7 @@ export const fetchCommentsDataAction = (id: number): ThunkActionResult =>
 export const fetchPostReviewAction = (newComment: CommentPost): ThunkActionResult =>
   async (dispatch, _getState, api) => {
     try {
-      await api.post<Comment>('/comments', newComment)
+      await api.post<Comment>(APIRoute.Comment, newComment)
         .then((data) => {
           if(data.status >= OK_CODE && data.status <= OK_CODE_TOP_RANGE) {
             dispatch(addComment(data.data));

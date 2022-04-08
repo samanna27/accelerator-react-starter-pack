@@ -3,7 +3,7 @@ import { Actions, ActionType } from '../types/action';
 import { State } from '../types/state';
 import { GuitarTypeChecked } from '../types/guitar';
 
-const initialState = {
+export const initialState = {
   guitars: [],
   allGuitarsComments: [],
   currentId: 0,
