@@ -2,7 +2,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { State } from '../../types/state';
 import { SORT_TYPES, SORT_ORDERS } from '../../const';
 import { MouseEvent, KeyboardEvent } from 'react';
-import { store } from '../../index';
+import { store } from '../../store/store';
 import { ThunkAppDispatch } from '../../types/action';
 import { changeSortType, changeOrderType } from '../../store/action';
 

@@ -1,7 +1,7 @@
 import { State } from '../../types/state';
 import { connect, ConnectedProps } from 'react-redux';
 import { FocusEvent, ChangeEvent, FormEvent, useState, useEffect, useRef} from 'react';
-import { store } from '../../index';
+import { store } from '../../store/store';
 import { updateMinPriceFilter, setMaxPriceFilter, updateGuitarTypeFilter, updateStringsTypeFilter, updateCardsRendered } from '../../store/action';
 import { ThunkAppDispatch } from '../../types/action';
 import { GUITAR_TYPE, STRINGS_QUANTITY_BY_GUITAR, GUITAR_STRINGS, CARDS_PER_PAGE } from '../../const';

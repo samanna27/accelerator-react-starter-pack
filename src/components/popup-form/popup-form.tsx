@@ -1,7 +1,7 @@
 import { SetStateAction, Dispatch, MutableRefObject, ChangeEvent, useState, useRef, FormEvent } from 'react';
 import { fetchPostReviewAction } from '../../store/api-actions';
 import { ThunkAppDispatch } from '../../types/action';
-import { store } from '../../index';
+import { store } from '../../store/store';
 import ReviewRatingStar from './review-rating-star';
 import { CommentPost } from '../../types/guitar';
 import {toast} from 'react-toastify';

@@ -1,16 +1,11 @@
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import App from './app';
 import { configureMockStore } from '@jedmao/redux-mock-store';
 import { Provider } from 'react-redux';
 import { AppRoute } from '../../const';
 import { createMemoryHistory } from 'history';
+import App from './app';
 
-// test('Renders app-component', () => {
-//   render(<App />);
-//   const textElement = screen.getByText(/Hello, world!/i);
-//   expect(textElement).toBeInTheDocument();
-// });
 const mockStore = configureMockStore();
 
 const store = mockStore({});
@@ -19,7 +14,7 @@ const history = createMemoryHistory();
 const fakeApp = (
   <Provider store={store}>
     <BrowserRouter>
-      <App />
+      <App/>
     </BrowserRouter>
   </Provider>
 );

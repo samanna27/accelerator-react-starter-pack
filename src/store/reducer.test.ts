@@ -6,8 +6,8 @@ import { UNKNOWN_ACTION } from '../store/action';
 
 describe('reducer: reducer', () => {
   it('without additional parameters should return initial state', () => {
-    expect(reducer(initialState, UNKNOWN_ACTION()))
-      .toEqual({initialState});
+    expect(reducer(initialState, {type: UNKNOWN_ACTION}))
+      .toEqual(initialState);
   });
 
   it('should update array of guitars objects and update status of data loaded', () => {

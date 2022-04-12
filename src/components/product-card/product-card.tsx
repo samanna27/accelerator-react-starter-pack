@@ -3,7 +3,7 @@ import { MAX_STAR_RATING, FULL_STAR } from '../../const';
 import { nanoid } from 'nanoid';
 import { fetchCommentsDataAction } from '../../store/api-actions';
 import { ThunkAppDispatch } from '../../types/action';
-import { store } from '../../index';
+import { store } from '../../store/store';
 import { connect, ConnectedProps } from 'react-redux';
 import { State } from '../../types/state';
 import { useEffect } from 'react';

@@ -11,7 +11,7 @@ import { sortGuitarsPriceDown, sortGuitarsRatingDown, sortGuitarsPriceUp, sortGu
 import { CARDS_PER_PAGE, END_CARD_INDEX, GUITARS_TYPES_CHECKED, START_CARD_INDEX, GUITAR_TYPE_CHECKED_FLAG, GUITAR_TYPE_CHECKED_INDEX, PAGENATION, DEFAULT_PAGES, STRINGS_QUANTITY_BY_GUITAR } from '../../const';
 import { useState, SyntheticEvent, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { store } from '../../index';
+import { store } from '../../store/store';
 import { updateCardsRendered, updateGuitarTypeFilter, updateStringsTypeFilter, changeOrderType, changeSortType, setMaxPriceFilter, updateMinPriceFilter } from '../../store/action';
 import { ThunkAppDispatch } from '../../types/action';
 import PreviousPage from './previous-page';
@@ -266,7 +266,7 @@ function CatalogPage({guitars, sortType, orderType, minPriceFilter, maxPriceFilt
         <Header />
         <main className="page-content">
           <div className="container">
-            <h1 className="page-content__title title title--bigger">Каталог гитар</h1>
+            <h1 className="page-content__title title title--bigger" data-testid="Каталог-гитар">Каталог гитар</h1>
             <ul className="breadcrumbs page-content__breadcrumbs">
               <li className="breadcrumbs__item"><a className="link" href="./main.html">Главная</a>
               </li>
