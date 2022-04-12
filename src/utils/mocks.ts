@@ -35,7 +35,7 @@ export const makeFakeComments = (guitarId: number): Comment[] => ([{
   disadvantage: 'very bad',
   comment: 'so-so-so-so',
   rating: 5,
-  createAt: date.recent(),
+  createAt: date.recent().toString(),
   guitarId: guitarId,
 },
 {
@@ -45,7 +45,7 @@ export const makeFakeComments = (guitarId: number): Comment[] => ([{
   disadvantage: 'very good',
   comment: 'i glad that i found that guitar',
   rating: 5,
-  createAt: date.past(),
+  createAt: date.past().toString(),
   guitarId: guitarId,
 }] as Comment[]);
 

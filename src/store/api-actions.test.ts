@@ -6,7 +6,7 @@ import { State } from '../types/state';
 import { Action } from 'redux';
 import { makeFakeGuitars, FakeMinPrice, FakeMaxPrice, makeFakeComments, makeFakeCommentToPost } from '../utils/mocks';
 import { APIRoute } from '../const';
-import { Guitar, Comment, CommentPost } from '../types/guitar';
+import { Guitar, CommentPost } from '../types/guitar';
 import { loadGuitars, updateMinPriceFilter, setMaxPriceFilter, loadGuitarComments, addComment } from './action';
 import { fetchProductsAction, fetchCommentsDataAction, fetchPostReviewAction } from './api-actions';
 import { date } from 'faker';
@@ -38,10 +38,9 @@ describe('Async actions', () => {
     ]);
   });
 
-
   it('should dispatch Load_Guitar_Comments when GET /guitars/:id/comments', async () => {
     const guitarId = 12;
-    const fakeComments: Comment[] = makeFakeComments(guitarId);
+    const fakeComments = makeFakeComments(guitarId);
     mockAPI
       .onGet(`guitars/${guitarId}/comments`)
       .reply(200, fakeComments);
@@ -57,15 +56,16 @@ describe('Async actions', () => {
   it('should dispatch AddComment when POST /comments', async () => {
     const guitarWithNewComment = 28;
     const fakeCommentToPost: CommentPost = makeFakeCommentToPost(guitarWithNewComment);
+    const dateOfCommentCreation = date.recent().toString();
     mockAPI
       .onPost(APIRoute.Comment)
-      .reply(201, {...fakeCommentToPost, createAt: date.recent(), id: 1});
+      .reply(201, {...fakeCommentToPost, createAt: dateOfCommentCreation, id: 1});
 
     const store = mockStore();
     await store.dispatch(fetchPostReviewAction(fakeCommentToPost));
 
     expect(store.getActions()).toEqual([
-      addComment({...fakeCommentToPost, createAt: date.recent(), id: 1}),
+      addComment({...fakeCommentToPost, createAt: dateOfCommentCreation, id: 1}),
     ]);
   });
 });

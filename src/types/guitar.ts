@@ -17,7 +17,7 @@ export type Comment = {
   disadvantage: string;
   comment: string;
   rating: number;
-  createAt: Date;
+  createAt: Date | string;
   guitarId: number;
 };
 
