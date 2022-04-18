@@ -18,7 +18,7 @@ function ModalCartAdd({setIsComponentVisible, setIsModalCartAddVisible}: ModalCa
           <div className="modal__content">
             <h2 className="modal__header title title--medium">Добавить товар в корзину</h2>
             <div className="modal__info">
-              <img className="modal__img" src="img/content/guitar-2.png" width="67" height="137" alt="Честер bass" />
+              <img className="modal__img" src="../../../public/img/content/guitar-2.png" width="67" height="137" alt="Честер bass" />
               <div className="modal__info-wrapper">
                 <h3 className="modal__product-name title title--little title--uppercase">Гитара Честер bass</h3>
                 <p className="modal__product-params modal__product-params--margin-11">Артикул: SO757575</p>

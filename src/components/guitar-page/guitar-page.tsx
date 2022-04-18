@@ -6,7 +6,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { State } from '../../types/state';
 import { MAX_STAR_RATING, FULL_STAR, GUITAR_TYPE_SINGLE, CHARACTERISTICS, COMMENTS_SHOW_PER_CLICK } from '../../const';
 import { nanoid } from 'nanoid';
-import { useState, useEffect, MouseEvent } from 'react';
+import { useState, useEffect, MouseEvent, useRef } from 'react';
 import dayjs from 'dayjs';
 import localeData from 'dayjs/plugin/localeData';
 import 'dayjs/locale/ru';
@@ -44,6 +44,7 @@ function GuitarPage({guitars, allGuitarsComments, commentsRendered}: ConnectedCo
   const product = guitars.slice().find((element) => element.id === productId);
   const comments: Comment[] | undefined = [...allGuitarsComments].slice().find((guitarComments) => guitarComments[0] === productId)?.[1].sort(sortCommentsDateDown);
   const exit = '';
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const [characteristic, setCharacteristic] = useState<string>(CHARACTERISTICS[0]);
   const [showMoreFlag, setShowMoreFlag] = useState<boolean>(true);
   const [isReviewPopupVisible, setIsReviewPopupVisible] = useState<boolean>(false);
@@ -89,6 +90,10 @@ function GuitarPage({guitars, allGuitarsComments, commentsRendered}: ConnectedCo
     const {id, name, previewImg, rating, type, stringCount, vendorCode, price, description} = product;
     const imageAddress = `../img/content${previewImg.substring(previewImg.indexOf('/'))}`;
     const starRange = (rating !== 0 ? new Array(MAX_STAR_RATING).fill(0).fill(1, 0, Math.floor(rating)): null);
+    //eslint-disable-next-line
+    console.log(starRange)
+
+
     const handleShowMoreButtonClick = (evt: MouseEvent<HTMLButtonElement>) => {
       evt.preventDefault();
       if(comments !== undefined && commentsRendered !== comments.length){
@@ -120,7 +125,7 @@ function GuitarPage({guitars, allGuitarsComments, commentsRendered}: ConnectedCo
     return (
       <>
         <Logo />
-        <div className="wrapper">
+        <div ref={wrapperRef} className="wrapper" >
           <Header />
           <main className="page-content">
             <div className="container">
@@ -139,7 +144,7 @@ function GuitarPage({guitars, allGuitarsComments, commentsRendered}: ConnectedCo
                   <h2 className="product-container__title title title--big title--uppercase">{name}</h2>
                   <div className="rate product-container__rating" aria-hidden="true"><span className="visually-hidden">Рейтинг:</span>
                     {starRange?.map((item) => (
-                      <svg key={name+nanoid()} width="14" height="14" aria-hidden="true">
+                      <svg key={name+nanoid()} width="12" height="11" aria-hidden="true">
                         <use xlinkHref={item === FULL_STAR ? '#icon-full-star' : '#icon-star'}></use>
                       </svg>
                     ))}
@@ -150,13 +155,17 @@ function GuitarPage({guitars, allGuitarsComments, commentsRendered}: ConnectedCo
                   </div>
                   <div className="tabs">
                     <a className={`button button--medium tabs__button ${characteristic === CHARACTERISTICS[0] ? '' : 'button--black-border' }`} href="#characteristics"
-                      onClick={() => setCharacteristic(CHARACTERISTICS[0])}
+                      onClick={(evt) => {
+                        evt.preventDefault();
+                        setCharacteristic(CHARACTERISTICS[0]);}}
                     >
                       Характеристики
                     </a>
                     <a className={`button ${characteristic === CHARACTERISTICS[1] ? '' : 'button--black-border' } button--medium tabs__button`}
                       href="#description"
-                      onClick={(evt) => setCharacteristic(CHARACTERISTICS[1])}
+                      onClick={(evt) => {
+                        evt.preventDefault();
+                        setCharacteristic(CHARACTERISTICS[1]);}}
                     >
                       Описание
                     </a>
@@ -216,7 +225,9 @@ function GuitarPage({guitars, allGuitarsComments, commentsRendered}: ConnectedCo
                 {comments !== undefined && comments?.length <= 3
                   ? ''
                   : showMoreFlag && <button className="button button--medium reviews__more-button" style={{ zIndex: '1000'}} onClick={handleShowMoreButtonClick}>Показать еще отзывы</button>}
-                <a className="button button--up button--red-border button--big reviews__up-button" style={{ zIndex: '1000'}} onClick={handleUpButtonClick} href="#">Наверх</a>
+                {comments !== undefined && comments?.length === 0
+                  ? ''
+                  :<a className="button button--up button--red-border button--big reviews__up-button" style={{ zIndex: '1000'}} onClick={handleUpButtonClick} href="#">Наверх</a>}
               </section>
             </div>
           </main>

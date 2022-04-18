@@ -1,12 +1,9 @@
-import { SetStateAction, Dispatch, MutableRefObject, ChangeEvent, useState, useRef, FormEvent } from 'react';
+import { SetStateAction, Dispatch, MutableRefObject, ChangeEvent, KeyboardEvent, MouseEvent, useState, useRef, FormEvent } from 'react';
 import { fetchPostReviewAction } from '../../store/api-actions';
 import { ThunkAppDispatch } from '../../types/action';
 import { store } from '../../store/store';
-import ReviewRatingStar from './review-rating-star';
+// import ReviewRatingStar from './review-rating-star';
 import { CommentPost } from '../../types/guitar';
-import {toast} from 'react-toastify';
-
-const RATING_MESSAGE = 'Пожалуйста, оцените продукт';
 
 type PopupFormProps = {
   setIsReviewPopupVisible: Dispatch<SetStateAction<boolean>>;
@@ -22,21 +19,78 @@ function PopupForm({setIsReviewPopupVisible, setIsComponentVisible, refPopup, gu
   const nameRef = useRef<HTMLInputElement>(null);
   const advantageRef = useRef<HTMLInputElement>(null);
   const disadvantageRef = useRef<HTMLInputElement>(null);
+  const lastFocusableElRef = useRef<HTMLButtonElement>(null);
+  const fifthStarRef = useRef<HTMLInputElement>(null);
+  const forthStarRef = useRef<HTMLInputElement>(null);
+  const thirdStarRef = useRef<HTMLInputElement>(null);
+  const secondStarRef = useRef<HTMLInputElement>(null);
+  const firstStarRef = useRef<HTMLInputElement>(null);
   const [rating, setRating] = useState<number>(0);
   const [name, setName] = useState<string>('');
   const [advantage, setAdvantage] = useState<string>('');
   const [disadvantage, setDisadvantage] = useState<string>('');
   const [newComment, setNewComment] = useState<string>('');
-  let starRatingCount = 5;
-  const stars =  new Array(5).fill('').map((index) => {
-    index=starRatingCount;
-    starRatingCount--;
+  // let starRatingCount = 5;
+  // const stars =  new Array(5).fill('').map((index) => {
+  //   index=starRatingCount;
+  //   starRatingCount--;
 
-    return index;
-  });
+  //   return index;
+  // });
 
-  const handleInputAreaChange = (evt: ChangeEvent<HTMLInputElement>, ratingToSet: number) => {
-    setRating(ratingToSet);
+  const KEYCODE_TAB = 9;
+
+  const handleInputKeydown = (evt: KeyboardEvent<HTMLElement>) => {
+    const isTabPressed = (evt.key === 'Tab' || evt.keyCode === KEYCODE_TAB);
+
+    if (!isTabPressed) {
+      return;
+    }
+
+    if ( evt.shiftKey ) /* shift + tab */ {
+      if (document.activeElement === nameRef.current) {
+        lastFocusableElRef.current?.focus();
+        evt.preventDefault();
+      } else if (document.activeElement === fifthStarRef.current) {
+        forthStarRef.current?.focus();
+        evt.preventDefault();
+      } else if (document.activeElement === forthStarRef.current) {
+        thirdStarRef.current?.focus();
+        evt.preventDefault();
+      } else if (document.activeElement === thirdStarRef.current) {
+        secondStarRef.current?.focus();
+        evt.preventDefault();
+      } else if (document.activeElement === secondStarRef.current) {
+        firstStarRef.current?.focus();
+        evt.preventDefault();
+      } else if (document.activeElement === firstStarRef.current) {
+        nameRef.current?.focus();
+        evt.preventDefault();
+      }
+    } else /* tab */ {
+      if (document.activeElement === lastFocusableElRef.current) {
+        nameRef.current?.focus();
+        evt.preventDefault();
+      } else if (document.activeElement === nameRef.current) {
+        firstStarRef.current?.focus();
+        evt.preventDefault();
+      } else if (document.activeElement === fifthStarRef.current) {
+        advantageRef.current?.focus();
+        evt.preventDefault();
+      } else if (document.activeElement === forthStarRef.current) {
+        fifthStarRef.current?.focus();
+        evt.preventDefault();
+      } else if (document.activeElement === thirdStarRef.current) {
+        forthStarRef.current?.focus();
+        evt.preventDefault();
+      } else if (document.activeElement === secondStarRef.current) {
+        thirdStarRef.current?.focus();
+        evt.preventDefault();
+      } else if (document.activeElement === firstStarRef.current) {
+        secondStarRef.current?.focus();
+        evt.preventDefault();
+      }
+    }
   };
 
   const handleTextareaChange = (evt: ChangeEvent<HTMLTextAreaElement>) => {
@@ -69,6 +123,11 @@ function PopupForm({setIsReviewPopupVisible, setIsComponentVisible, refPopup, gu
     }
 
     evt.target.reportValidity();
+  };
+
+  const handleStarClick = (evt: MouseEvent<HTMLInputElement>) => {
+    fifthStarRef.current?.setCustomValidity('');
+    fifthStarRef.current?.reportValidity();
   };
 
   const isFormValid = name.length > 0 && newComment.length > 0 && advantage.length > 0 && disadvantage.length > 0 && rating !== 0;
@@ -104,9 +163,12 @@ function PopupForm({setIsReviewPopupVisible, setIsComponentVisible, refPopup, gu
     }
     textRef.current?.reportValidity();
 
-    if(rating === 0){
-      toast.info(RATING_MESSAGE);
+    if(!fifthStarRef.current?.checked && !forthStarRef.current?.checked && !thirdStarRef.current?.checked && !secondStarRef.current?.checked && !firstStarRef.current?.checked){
+      fifthStarRef.current?.setCustomValidity('Пожалуйста, оцените продукт');
+    } else {
+      fifthStarRef.current?.setCustomValidity('');
     }
+    fifthStarRef.current?.reportValidity();
 
     if(isFormValid){
       const newReview: CommentPost = {
@@ -123,6 +185,7 @@ function PopupForm({setIsReviewPopupVisible, setIsComponentVisible, refPopup, gu
       setIsReviewPopupVisible(false);
       setIsReviewSentModalVisible(true);
     }
+
   };
 
   const closePopup = () => {
@@ -143,27 +206,97 @@ function PopupForm({setIsReviewPopupVisible, setIsComponentVisible, refPopup, gu
                 <div className="form-review__wrapper">
                   <div className="form-review__name-wrapper">
                     <label className="form-review__label form-review__label--required" htmlFor="user-name">Ваше Имя</label>
-                    <input ref={nameRef} className="form-review__input form-review__input--name" id="user-name" type="text" autoComplete="off" onChange={handleInputChange}/><span className="form-review__warning">Заполните поле</span>
+                    <input autoFocus tabIndex={0}
+                      ref={nameRef}
+                      className="form-review__input form-review__input--name"
+                      id="user-name"
+                      type="text"
+                      autoComplete="off"
+                      onChange={handleInputChange}
+                      onKeyDown={handleInputKeydown}
+                    />
+                    <span className="form-review__warning">Заполните поле</span>
                   </div>
                   <div><span className="form-review__label form-review__label--required">Ваша Оценка</span>
                     <div className="rate rate--reverse" >
-                      {stars.map((star) => <ReviewRatingStar key={star} rating={star} setRating={handleInputAreaChange}/>)}
+                      {/* {stars.map((star) => <ReviewRatingStar key={star} rating={star} setRating={handleInputAreaChange}/>)} */}
+                      <input
+                        tabIndex={5}
+                        className="visually-hidden" type="radio" name="rate" value={5}
+                        id="star-5"
+                        onChange={() => setRating(5)}
+                        onKeyDown={handleInputKeydown}
+                        onClick={handleStarClick}
+                        ref={fifthStarRef}
+                      />
+                      <label className="rate__label" htmlFor="star-5" title="Отлично"></label>
+                      <input
+                        tabIndex={4}
+                        className="visually-hidden" type="radio" name="rate" value={4}
+                        id="star-4"
+                        onChange={() =>setRating(4)}
+                        onClick={handleStarClick}
+                        onKeyDown={handleInputKeydown}
+                        ref={forthStarRef}
+                      />
+                      <label className="rate__label" htmlFor="star-4" title="Хорошо"></label>
+                      <input
+                        tabIndex={3}
+                        className="visually-hidden" type="radio" name="rate" value={3}
+                        id="star-3"
+                        onChange={() => setRating(3)}
+                        onClick={handleStarClick}
+                        onKeyDown={handleInputKeydown}
+                        ref={thirdStarRef}
+                      />
+                      <label className="rate__label" htmlFor="star-3" title="Удовлетворительно"></label>
+                      <input
+                        tabIndex={2}
+                        className="visually-hidden" type="radio" name="rate" value={2}
+                        id="star-2"
+                        onChange={() => setRating(2)}
+                        onClick={handleStarClick}
+                        onKeyDown={handleInputKeydown}
+                        ref={secondStarRef}
+                      />
+                      <label className="rate__label" htmlFor="star-2" title="Неудовлетворительно"></label>
+                      <input
+                        tabIndex={1}
+                        className="visually-hidden" type="radio" name="rate" value={1}
+                        id="star-1"
+                        onChange={() => setRating(1)}
+                        onClick={handleStarClick}
+                        onKeyDown={handleInputKeydown}
+                        ref={firstStarRef}
+                      />
+                      <label className="rate__label" htmlFor="star-1" title="Плохо"></label>
+                      {/* <ReviewRatingStar ref={fifthStarRef} key={5} rating={5} setRating={handleInputAreaChange} onKeyDown={handleInputKeydown}/>
+                      <ReviewRatingStar ref={forthStarRef} key={4} rating={4} setRating={handleInputAreaChange} onKeyDown={handleInputKeydown}/> */}
                       <span className="rate__count"></span><span className="rate__message">Поставьте оценку</span>
                     </div>
                   </div>
                 </div>
                 <label className="form-review__label" htmlFor="user-name">Достоинства</label>
-                <input ref={advantageRef} className="form-review__input" id="pros" type="text" autoComplete="off" onChange={handleInputChange}/>
+                <input tabIndex={6} ref={advantageRef} className="form-review__input" id="pros" type="text" autoComplete="off" onChange={handleInputChange}/>
                 <label className="form-review__label" htmlFor="user-name">Недостатки</label>
-                <input ref={disadvantageRef} className="form-review__input" id="user-name" type="text" autoComplete="off" onChange={handleInputChange}/>
+                <input tabIndex={7} ref={disadvantageRef} className="form-review__input" id="user-name" type="text" autoComplete="off" onChange={handleInputChange}/>
                 <label className="form-review__label" htmlFor="user-name">Комментарий</label>
-                <textarea ref={textRef} value={newComment} onChange={handleTextareaChange}
+                <textarea tabIndex={8} ref={textRef} value={newComment} onChange={handleTextareaChange}
                   className="form-review__input form-review__input--textarea" id="user-name" rows={10} autoComplete="off"
                 >
                 </textarea>
-                <button className="button button--medium-20 form-review__button" type="submit">Отправить отзыв</button>
+                <button tabIndex={9} className="button button--medium-20 form-review__button" type="submit">Отправить отзыв</button>
               </form>
-              <button className="modal__close-btn button-cross" type="button" aria-label="Закрыть" onClick={closePopup}><span className="button-cross__icon"></span><span className="modal__close-btn-interactive-area"></span>
+              <button ref ={lastFocusableElRef}
+                tabIndex={10}
+                className="modal__close-btn button-cross"
+                type="button"
+                aria-label="Закрыть"
+                onClick={closePopup}
+                onKeyDown={handleInputKeydown}
+              >
+                <span className="button-cross__icon"></span>
+                <span className="modal__close-btn-interactive-area"></span>
               </button>
             </div>
           </div>
