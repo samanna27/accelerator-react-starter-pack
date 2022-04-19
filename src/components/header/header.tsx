@@ -1,5 +1,6 @@
 import { ChangeEvent, KeyboardEvent, MouseEvent } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { State } from '../../types/state';
 import { useState, useRef, useEffect} from 'react';
 import useComponentVisible from '../../hooks/useComponentVisible';
@@ -43,16 +44,19 @@ function Header({guitars}: ConnectedComponentProps): JSX.Element {
   return (
     <header className="header" id="header">
       <div className="container header__wrapper">
-        <a className="header__logo logo">
-          <img className="logo__img" width="70" height="70" src="./img/svg/logo.svg" alt="Логотип" />
-        </a>
+        <Link className="header__logo logo" to="/">
+          <img className="logo__img" width="70" height="70" src="../img/svg/logo.svg" alt="Логотип" />
+        </Link>
         <nav className="main-nav">
           <ul className="main-nav__list">
-            <li><a className="link main-nav__link link--current" href="#">Каталог</a>
+            <li>
+              <a className="link main-nav__link" href="/" >Каталог</a>
             </li>
-            <li><a className="link main-nav__link" href="#">Где купить?</a>
+            <li>
+              <a className="link main-nav__link" href="#">Где купить?</a>
             </li>
-            <li><a className="link main-nav__link" href="#">О компании</a>
+            <li>
+              <a className="link main-nav__link" href="#">О компании</a>
             </li>
           </ul>
         </nav>

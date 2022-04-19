@@ -46,7 +46,7 @@ function ProductCard({guitar, allGuitarsComments}: ConnectedComponentProps): JSX
           <div className="rate product-card__rate" aria-hidden="true"><span className="visually-hidden">Рейтинг:</span>
             {starRange?.map((item) => (
               <svg key={name+nanoid()} width="12" height="11" aria-hidden="true">
-                <use xlinkHref={item === FULL_STAR ? '#icon-full-star' : '#icon-star'}></use>
+                <use xlinkHref={item === FULL_STAR ? 'img/sprite/icon-full-star.svg#icon-full-star' : 'img/sprite/icon-star.svg#icon-star'}></use>
               </svg>
             ))}
             <span className="rate__count">

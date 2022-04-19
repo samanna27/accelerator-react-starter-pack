@@ -1,4 +1,3 @@
-import Logo from '../logo/logo';
 import Footer from '../footer/footer';
 import Header from '../header/header';
 import { useParams } from 'react-router';
@@ -55,6 +54,11 @@ function GuitarPage({guitars, allGuitarsComments, commentsRendered}: ConnectedCo
     threshold: 0,
   });
   const navigate = useNavigate();
+  const [yScroll, setYScroll] = useState(0);
+
+  useEffect(() => {
+    window.scrollTo(0, yScroll);
+  });
 
   useEffect(() => {
     if(comments !== undefined && commentsRendered !== comments.length){
@@ -90,12 +94,10 @@ function GuitarPage({guitars, allGuitarsComments, commentsRendered}: ConnectedCo
     const {id, name, previewImg, rating, type, stringCount, vendorCode, price, description} = product;
     const imageAddress = `../img/content${previewImg.substring(previewImg.indexOf('/'))}`;
     const starRange = (rating !== 0 ? new Array(MAX_STAR_RATING).fill(0).fill(1, 0, Math.floor(rating)): null);
-    //eslint-disable-next-line
-    console.log(starRange)
-
 
     const handleShowMoreButtonClick = (evt: MouseEvent<HTMLButtonElement>) => {
       evt.preventDefault();
+      setYScroll(window.scrollY);
       if(comments !== undefined && commentsRendered !== comments.length){
         const commentsRenderedQuantity: number = commentsRendered + Math.min(COMMENTS_SHOW_PER_CLICK, (comments.length-commentsRendered));
         (store.dispatch as ThunkAppDispatch)(updateCommentsRendered(commentsRenderedQuantity));
@@ -124,7 +126,6 @@ function GuitarPage({guitars, allGuitarsComments, commentsRendered}: ConnectedCo
 
     return (
       <>
-        <Logo />
         <div ref={wrapperRef} className="wrapper" >
           <Header />
           <main className="page-content">
@@ -145,7 +146,7 @@ function GuitarPage({guitars, allGuitarsComments, commentsRendered}: ConnectedCo
                   <div className="rate product-container__rating" aria-hidden="true"><span className="visually-hidden">Рейтинг:</span>
                     {starRange?.map((item) => (
                       <svg key={name+nanoid()} width="12" height="11" aria-hidden="true">
-                        <use xlinkHref={item === FULL_STAR ? '#icon-full-star' : '#icon-star'}></use>
+                        <use xlinkHref={item === FULL_STAR ? '../img/sprite/icon-full-star.svg#icon-full-star' : '../img/sprite/icon-star.svg#icon-star'}></use>
                       </svg>
                     ))}
                     <span className="rate__count">
@@ -209,7 +210,7 @@ function GuitarPage({guitars, allGuitarsComments, commentsRendered}: ConnectedCo
                       <div className="rate review__rating-panel" aria-hidden="true"><span className="visually-hidden">Рейтинг:</span>
                         {new Array(MAX_STAR_RATING).fill(0).fill(1, 0, Math.floor(comment.rating))?.map((item) => (
                           <svg key={name+nanoid()} width="16" height="16" aria-hidden="true">
-                            <use xlinkHref={item === FULL_STAR ? '#icon-full-star' : '#icon-star'}></use>
+                            <use xlinkHref={item === FULL_STAR ? '../img/sprite/icon-full-star.svg#icon-full-star' : '../img/sprite/icon-star.svg#icon-star'}></use>
                           </svg>
                         ))}
                         <span className="rate__count"></span><span className="rate__message"></span>

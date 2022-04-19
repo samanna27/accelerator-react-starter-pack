@@ -2,7 +2,6 @@ import { SetStateAction, Dispatch, MutableRefObject, ChangeEvent, KeyboardEvent,
 import { fetchPostReviewAction } from '../../store/api-actions';
 import { ThunkAppDispatch } from '../../types/action';
 import { store } from '../../store/store';
-// import ReviewRatingStar from './review-rating-star';
 import { CommentPost } from '../../types/guitar';
 
 type PopupFormProps = {
@@ -30,13 +29,6 @@ function PopupForm({setIsReviewPopupVisible, setIsComponentVisible, refPopup, gu
   const [advantage, setAdvantage] = useState<string>('');
   const [disadvantage, setDisadvantage] = useState<string>('');
   const [newComment, setNewComment] = useState<string>('');
-  // let starRatingCount = 5;
-  // const stars =  new Array(5).fill('').map((index) => {
-  //   index=starRatingCount;
-  //   starRatingCount--;
-
-  //   return index;
-  // });
 
   const KEYCODE_TAB = 9;
 
@@ -219,7 +211,6 @@ function PopupForm({setIsReviewPopupVisible, setIsComponentVisible, refPopup, gu
                   </div>
                   <div><span className="form-review__label form-review__label--required">Ваша Оценка</span>
                     <div className="rate rate--reverse" >
-                      {/* {stars.map((star) => <ReviewRatingStar key={star} rating={star} setRating={handleInputAreaChange}/>)} */}
                       <input
                         tabIndex={5}
                         className="visually-hidden" type="radio" name="rate" value={5}
@@ -270,8 +261,6 @@ function PopupForm({setIsReviewPopupVisible, setIsComponentVisible, refPopup, gu
                         ref={firstStarRef}
                       />
                       <label className="rate__label" htmlFor="star-1" title="Плохо"></label>
-                      {/* <ReviewRatingStar ref={fifthStarRef} key={5} rating={5} setRating={handleInputAreaChange} onKeyDown={handleInputKeydown}/>
-                      <ReviewRatingStar ref={forthStarRef} key={4} rating={4} setRating={handleInputAreaChange} onKeyDown={handleInputKeydown}/> */}
                       <span className="rate__count"></span><span className="rate__message">Поставьте оценку</span>
                     </div>
                   </div>

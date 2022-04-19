@@ -1,4 +1,3 @@
-import Logo from '../logo/logo';
 import { State } from '../../types/state';
 import { Guitar } from '../../types/guitar';
 import { connect, ConnectedProps } from 'react-redux';
@@ -260,56 +259,52 @@ function CatalogPage({guitars, sortType, orderType, minPriceFilter, maxPriceFilt
   };
 
   return(
-    <>
-      <Logo />
-      <div className="wrapper">
-        <Header />
-        <main className="page-content">
-          <div className="container">
-            <h1 className="page-content__title title title--bigger" data-testid="Каталог-гитар">Каталог гитар</h1>
-            <ul className="breadcrumbs page-content__breadcrumbs">
-              <li className="breadcrumbs__item"><a className="link" href="./main.html">Главная</a>
-              </li>
-              <li className="breadcrumbs__item"><Link className="link" to="#">Каталог</Link>
-              </li>
-            </ul>
-            <div className="catalog">
-              <CatalogFilter guitarsFilteredByTypeAndStrings={(guitarsFilteredByTypeAndStrings && guitarsFilteredByTypeAndStrings.length >0) ? guitarsFilteredByTypeAndStrings : guitars} />
-              <CatalogSort />
-              <div className="cards catalog__cards">
-                {guitarsForRendering?.slice(cardsRendered[START_CARD_INDEX],cardsRendered[END_CARD_INDEX]).map((guitar) => (
-                  <ProductCard key={guitar.id} guitar={guitar} />
-                ))}
-              </div>
-              <div className="pagination page-content__pagination">
-                <ul className="pagination__list">
-                  {isPreviousPage? <PreviousPage pageURL={pageURL.toString()} onClick={handlePreviousNextPageClick}/> : '' }
-                  {PAGENATION.map((page) => (
-                    guitarsForRendering && ((page-1)*CARDS_PER_PAGE < guitarsForRendering.length)
-                      ?
-                      <li key={page}
-                        className={`pagination__page ${ isActivePage === page.toString() ? 'pagination__page--active' : ''}`}
-                      >
-                        <Link className="link pagination__page-link" to={`catalog/page_${page}`} onClick={(evt) => {
-                          setIsActivePage(page.toString());
-                          handlePageClick(evt);
-                        }}
-                        >{page}
-                        </Link>
-                      </li>
-                      :''))}
-                  {isNextPage && guitarsForRendering !== undefined && guitarsForRendering?.length > CARDS_PER_PAGE
-                    ? <NextPage pageURL={pageURL.toString()} onClick={handlePreviousNextPageClick} />
-                    : '' }
-                </ul>
-              </div>
+    <div className="wrapper">
+      <Header />
+      <main className="page-content">
+        <div className="container">
+          <h1 className="page-content__title title title--bigger" data-testid="Каталог-гитар">Каталог гитар</h1>
+          <ul className="breadcrumbs page-content__breadcrumbs">
+            <li className="breadcrumbs__item"><a className="link" href="./main.html">Главная</a>
+            </li>
+            <li className="breadcrumbs__item"><Link className="link" to="#">Каталог</Link>
+            </li>
+          </ul>
+          <div className="catalog">
+            <CatalogFilter guitarsFilteredByTypeAndStrings={(guitarsFilteredByTypeAndStrings && guitarsFilteredByTypeAndStrings.length >0) ? guitarsFilteredByTypeAndStrings : guitars} />
+            <CatalogSort />
+            <div className="cards catalog__cards">
+              {guitarsForRendering?.slice(cardsRendered[START_CARD_INDEX],cardsRendered[END_CARD_INDEX]).map((guitar) => (
+                <ProductCard key={guitar.id} guitar={guitar} />
+              ))}
+            </div>
+            <div className="pagination page-content__pagination">
+              <ul className="pagination__list">
+                {isPreviousPage? <PreviousPage pageURL={pageURL.toString()} onClick={handlePreviousNextPageClick}/> : '' }
+                {PAGENATION.map((page) => (
+                  guitarsForRendering && ((page-1)*CARDS_PER_PAGE < guitarsForRendering.length)
+                    ?
+                    <li key={page}
+                      className={`pagination__page ${ isActivePage === page.toString() ? 'pagination__page--active' : ''}`}
+                    >
+                      <Link className="link pagination__page-link" to={`catalog/page_${page}`} onClick={(evt) => {
+                        setIsActivePage(page.toString());
+                        handlePageClick(evt);
+                      }}
+                      >{page}
+                      </Link>
+                    </li>
+                    :''))}
+                {isNextPage && guitarsForRendering !== undefined && guitarsForRendering?.length > CARDS_PER_PAGE
+                  ? <NextPage pageURL={pageURL.toString()} onClick={handlePreviousNextPageClick} />
+                  : '' }
+              </ul>
             </div>
           </div>
-        </main>
-        <Footer />
-      </div>
-    </>
-
+        </div>
+      </main>
+      <Footer />
+    </div>
   );
 }
 
