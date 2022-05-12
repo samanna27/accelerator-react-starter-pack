@@ -3,6 +3,7 @@ import { GuitarType, StringsByGuitarType } from './types/guitar';
 export enum AppRoute {
   Catalog = '/',
   Guitar = '/guitars/:id',
+  Cart = '/cart',
 }
 
 export enum APIRoute {
@@ -26,7 +27,7 @@ export const GUITAR_TYPE: GuitarType = {
 };
 
 export const GUITAR_TYPE_SINGLE: GuitarType = {
-  'acoustic': 'Акустические гитара',
+  'acoustic': 'Акустическая гитара',
   'electric': 'Электрогитара',
   'ukulele': 'Укулеле',
 };

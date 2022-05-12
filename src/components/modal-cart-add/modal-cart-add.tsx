@@ -1,13 +1,27 @@
 import { Dispatch, SetStateAction } from 'react';
+import { addProductToCart } from '../../store/action';
+import { ThunkAppDispatch } from '../../types/action';
+import { store } from '../../store/store';
+import { Guitar } from '../../types/guitar';
 
 type ModalCartAddProps = {
-  setIsComponentVisible: Dispatch<SetStateAction<boolean>>;
+  product: Guitar;
   setIsModalCartAddVisible: Dispatch<SetStateAction<boolean>>;
+  setIsModalSuccessAddVisible: Dispatch<SetStateAction<boolean>>;
 };
 
-function ModalCartAdd({setIsComponentVisible, setIsModalCartAddVisible}: ModalCartAddProps): JSX.Element {
-  const closePopup = () => {
+function ModalCartAdd({product, setIsModalCartAddVisible, setIsModalSuccessAddVisible}: ModalCartAddProps): JSX.Element {
+  const {name, vendorCode, stringCount, previewImg, price} = product;
+  const imageAddress = `../img/content${previewImg.substring(previewImg.indexOf('/'))}`;
+
+  const handleClosePopupClick = () => {
     setIsModalCartAddVisible(false);
+  };
+
+  const handleAddProductToCartClick = () => {
+    (store.dispatch as ThunkAppDispatch)(addProductToCart(product));
+    setIsModalCartAddVisible(false);
+    setIsModalSuccessAddVisible(true);
   };
 
   return (
@@ -18,23 +32,24 @@ function ModalCartAdd({setIsComponentVisible, setIsModalCartAddVisible}: ModalCa
           <div className="modal__content">
             <h2 className="modal__header title title--medium">Добавить товар в корзину</h2>
             <div className="modal__info">
-              <img className="modal__img" src="../img/content/guitar-2.jpg" width="67" height="137" alt="Честер bass" />
+              <img className="modal__img" src={imageAddress} width="67" height="137" alt="Честер bass" />
               <div className="modal__info-wrapper">
-                <h3 className="modal__product-name title title--little title--uppercase">Гитара Честер bass</h3>
-                <p className="modal__product-params modal__product-params--margin-11">Артикул: SO757575</p>
-                <p className="modal__product-params">Электрогитара, 6 струнная</p>
-                <p className="modal__price-wrapper"><span className="modal__price">Цена:</span><span className="modal__price">17 500 ₽</span></p>
+                <h3 className="modal__product-name title title--little title--uppercase">Гитара {name}</h3>
+                <p className="modal__product-params modal__product-params--margin-11">Артикул: {vendorCode}</p>
+                <p className="modal__product-params">Электрогитара, {stringCount} струнная</p>
+                <p className="modal__price-wrapper"><span className="modal__price">Цена:</span><span className="modal__price">{price.toLocaleString('ru-RU')} ₽</span></p>
               </div>
             </div>
             <div className="modal__button-container">
-              <button className="button button--red button--big modal__button modal__button--add">Добавить в корзину</button>
+              <button className="button button--red button--big modal__button modal__button--add" onClick={handleAddProductToCartClick}>Добавить в корзину</button>
             </div>
-            <button className="modal__close-btn button-cross" type="button" aria-label="Закрыть" onClick={closePopup}><span className="button-cross__icon"></span><span className="modal__close-btn-interactive-area"></span>
+            <button className="modal__close-btn button-cross" type="button" aria-label="Закрыть" onClick={handleClosePopupClick}><span className="button-cross__icon"></span><span className="modal__close-btn-interactive-area"></span>
             </button>
           </div>
         </div>
       </div>
-    </div>);
+    </div>
+  );
 }
 
 export default ModalCartAdd;

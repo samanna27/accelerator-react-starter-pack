@@ -67,6 +67,11 @@ export const addComment = (newComment: Comment) => ({
   payload: newComment,
 } as const);
 
+export const addProductToCart = (product: Guitar) => ({
+  type: ActionType.AddProductToCart,
+  payload: product,
+} as const);
+
 export const UNKNOWN_ACTION = () => ({
   type: UNKNOWN_ACTION,
 } as const);

@@ -6,16 +6,19 @@ import { ThunkAppDispatch } from '../../types/action';
 import { store } from '../../store/store';
 import { connect, ConnectedProps } from 'react-redux';
 import { State } from '../../types/state';
-import { useEffect } from 'react';
+import { useEffect, Dispatch, SetStateAction } from 'react';
 import { Link } from 'react-router-dom';
 
 type ProductCardProps = {
   guitar: Guitar;
+  setGuitarToCart: Dispatch<SetStateAction<Guitar>>;
+  setIsModalCartAddVisible: Dispatch<SetStateAction<boolean>>;
 };
 
-const mapStateToProps = ({allGuitarsComments, currentId}: State) => ({
+const mapStateToProps = ({allGuitarsComments, currentId, productsInCart}: State) => ({
   allGuitarsComments,
   currentId,
+  productsInCart,
 });
 
 const connector = connect(mapStateToProps);
@@ -23,8 +26,13 @@ const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & ProductCardProps;
 
-function ProductCard({guitar, allGuitarsComments}: ConnectedComponentProps): JSX.Element {
+function ProductCard({guitar, allGuitarsComments, setIsModalCartAddVisible, setGuitarToCart, productsInCart}: ConnectedComponentProps): JSX.Element {
   const exit = '';
+
+  const handleAddToCartClick = () => {
+    setGuitarToCart({...guitar});
+    setIsModalCartAddVisible(true);
+  };
 
   useEffect(() => {
     if(guitar !== null) {
@@ -60,7 +68,10 @@ function ProductCard({guitar, allGuitarsComments}: ConnectedComponentProps): JSX
           <p className="product-card__price"><span className="visually-hidden">Цена:</span>{price.toLocaleString('ru-RU')} ₽
           </p>
         </div>
-        <div className="product-card__buttons"><Link className="button button--mini" to={`/guitars/${id}`}>Подробнее</Link><a className="button button--red button--mini button--add-to-cart" href="#">Купить</a>
+        <div className="product-card__buttons">
+          <Link className="button button--mini" to={`/guitars/${id}`}>Подробнее</Link>
+          {productsInCart.slice().filter((productInCart) => productInCart.id === guitar.id).length === 0 && <a className="button button--red button--mini button--add-to-cart" href="#" onClick={handleAddToCartClick}>Купить</a>}
+          {productsInCart.slice().filter((productInCart) => productInCart.id === guitar.id).length > 0 && <a className="button button--red-border button--mini button--in-cart" href="#">В Корзине</a>}
         </div>
       </div>
     );

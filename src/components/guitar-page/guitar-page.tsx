@@ -20,6 +20,7 @@ import useComponentVisible from '../../hooks/useComponentVisible';
 import PopupForm from '../popup-form/popup-form';
 import ReviewSentModal from '../review-sent-modal/review-sent-modal';
 import ModalCartAdd from '../modal-cart-add/modal-cart-add';
+import ModalSuccessAdd from '../modal-success-add/modal-success-add';
 import { useNavigate } from 'react-router';
 import { useInView } from 'react-intersection-observer';
 
@@ -49,6 +50,7 @@ function GuitarPage({guitars, allGuitarsComments, commentsRendered}: ConnectedCo
   const [isReviewPopupVisible, setIsReviewPopupVisible] = useState<boolean>(false);
   const [isReviewSentModalVisible, setIsReviewSentModalVisible] = useState<boolean>(false);
   const [isModalCartAddVisible, setIsModalCartAddVisible] = useState<boolean>(false);
+  const [isModalSuccessAddVisible, setIsModalSuccessAddVisible] = useState<boolean>(false);
   const { refPopup, refReviewSent, isComponentVisible, setIsComponentVisible } = useComponentVisible(true);
   const { ref, inView } = useInView({
     threshold: 0,
@@ -237,7 +239,8 @@ function GuitarPage({guitars, allGuitarsComments, commentsRendered}: ConnectedCo
         <div ref={ref}></div>
         {isComponentVisible && isReviewPopupVisible && <PopupForm guitarName={name} refPopup={refPopup} setIsComponentVisible={setIsComponentVisible} setIsReviewPopupVisible={setIsReviewPopupVisible} setIsReviewSentModalVisible={setIsReviewSentModalVisible} guitarId={productId} />}
         {isComponentVisible && isReviewSentModalVisible && <ReviewSentModal id={id} refReviewSent={refReviewSent} setIsComponentVisible={setIsComponentVisible} setIsReviewSentModalVisible={setIsReviewSentModalVisible} setIsReviewPopupVisible={setIsReviewPopupVisible}/>}
-        {isModalCartAddVisible && <ModalCartAdd setIsComponentVisible={setIsComponentVisible} setIsModalCartAddVisible={setIsModalCartAddVisible}/>}
+        {isModalCartAddVisible && <ModalCartAdd product={product} setIsModalSuccessAddVisible={setIsModalSuccessAddVisible} setIsModalCartAddVisible={setIsModalCartAddVisible}/>}
+        {isModalSuccessAddVisible && <ModalSuccessAdd setIsModalSuccessAddVisible={setIsModalSuccessAddVisible}/>}
       </>
     );
   }}

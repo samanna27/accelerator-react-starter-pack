@@ -4,6 +4,8 @@ import { connect, ConnectedProps } from 'react-redux';
 import ProductCard from '../product-card/product-card';
 import CatalogFilter from '../catalog-filter/catalog-filter';
 import CatalogSort from '../catalog-sort/catalog-sort';
+import ModalCartAdd from '../modal-cart-add/modal-cart-add';
+import ModalSuccessAdd from '../modal-success-add/modal-success-add';
 import Header from '../header/header';
 import Footer from '../footer/footer';
 import { sortGuitarsPriceDown, sortGuitarsRatingDown, sortGuitarsPriceUp, sortGuitarsRatingUp } from '../../utils/common';
@@ -39,6 +41,9 @@ function CatalogPage({guitars, sortType, orderType, minPriceFilter, maxPriceFilt
   const [isPreviousPage, setIsPreviousPage] = useState<boolean>(false);
   const [isNextPage, setIsNextPage] = useState<boolean>(true);
   const [guitarsFromTo, setGuitarsFromTo] = useState<number[]>([0,CARDS_PER_PAGE]);
+  const [isModalCartAddVisible, setIsModalCartAddVisible] = useState<boolean>(false);
+  const [isModalSuccessAddVisible, setIsModalSuccessAddVisible] = useState<boolean>(false);
+  const [guitarToCart, setGuitarToCart] = useState<Guitar>(guitars[1]);
   const pageURL: number = Math.round((cardsRendered[START_CARD_INDEX])/CARDS_PER_PAGE+1);
   const navigate = useNavigate();
   const location = useLocation();
@@ -258,53 +263,61 @@ function CatalogPage({guitars, sortType, orderType, minPriceFilter, maxPriceFilt
     }
   };
 
+  // useEffect(() => {
+
+  // });
+
   return(
-    <div className="wrapper">
-      <Header />
-      <main className="page-content">
-        <div className="container">
-          <h1 className="page-content__title title title--bigger" data-testid="Каталог-гитар">Каталог гитар</h1>
-          <ul className="breadcrumbs page-content__breadcrumbs">
-            <li className="breadcrumbs__item"><a className="link" href="./main.html">Главная</a>
-            </li>
-            <li className="breadcrumbs__item"><Link className="link" to="#">Каталог</Link>
-            </li>
-          </ul>
-          <div className="catalog">
-            <CatalogFilter guitarsFilteredByTypeAndStrings={(guitarsFilteredByTypeAndStrings && guitarsFilteredByTypeAndStrings.length >0) ? guitarsFilteredByTypeAndStrings : guitars} />
-            <CatalogSort />
-            <div className="cards catalog__cards">
-              {guitarsForRendering?.slice(cardsRendered[START_CARD_INDEX],cardsRendered[END_CARD_INDEX]).map((guitar) => (
-                <ProductCard key={guitar.id} guitar={guitar} />
-              ))}
-            </div>
-            <div className="pagination page-content__pagination">
-              <ul className="pagination__list">
-                {isPreviousPage? <PreviousPage pageURL={pageURL.toString()} onClick={handlePreviousNextPageClick}/> : '' }
-                {PAGENATION.map((page) => (
-                  guitarsForRendering && ((page-1)*CARDS_PER_PAGE < guitarsForRendering.length)
-                    ?
-                    <li key={page}
-                      className={`pagination__page ${ isActivePage === page.toString() ? 'pagination__page--active' : ''}`}
-                    >
-                      <Link className="link pagination__page-link" to={`catalog/page_${page}`} onClick={(evt) => {
-                        setIsActivePage(page.toString());
-                        handlePageClick(evt);
-                      }}
-                      >{page}
-                      </Link>
-                    </li>
-                    :''))}
-                {isNextPage && guitarsForRendering !== undefined && guitarsForRendering?.length > CARDS_PER_PAGE
-                  ? <NextPage pageURL={pageURL.toString()} onClick={handlePreviousNextPageClick} />
-                  : '' }
-              </ul>
+    <>
+      <div className="wrapper">
+        <Header />
+        <main className="page-content">
+          <div className="container">
+            <h1 className="page-content__title title title--bigger" data-testid="Каталог-гитар">Каталог гитар</h1>
+            <ul className="breadcrumbs page-content__breadcrumbs">
+              <li className="breadcrumbs__item"><a className="link" href="./main.html">Главная</a>
+              </li>
+              <li className="breadcrumbs__item"><Link className="link" to="#">Каталог</Link>
+              </li>
+            </ul>
+            <div className="catalog">
+              <CatalogFilter guitarsFilteredByTypeAndStrings={(guitarsFilteredByTypeAndStrings && guitarsFilteredByTypeAndStrings.length >0) ? guitarsFilteredByTypeAndStrings : guitars} />
+              <CatalogSort />
+              <div className="cards catalog__cards">
+                {guitarsForRendering?.slice(cardsRendered[START_CARD_INDEX],cardsRendered[END_CARD_INDEX]).map((guitar) => (
+                  <ProductCard key={guitar.id} guitar={guitar} setIsModalCartAddVisible={setIsModalCartAddVisible} setGuitarToCart={setGuitarToCart}/>
+                ))}
+              </div>
+              <div className="pagination page-content__pagination">
+                <ul className="pagination__list">
+                  {isPreviousPage? <PreviousPage pageURL={pageURL.toString()} onClick={handlePreviousNextPageClick}/> : '' }
+                  {PAGENATION.map((page) => (
+                    guitarsForRendering && ((page-1)*CARDS_PER_PAGE < guitarsForRendering.length)
+                      ?
+                      <li key={page}
+                        className={`pagination__page ${ isActivePage === page.toString() ? 'pagination__page--active' : ''}`}
+                      >
+                        <Link className="link pagination__page-link" to={`catalog/page_${page}`} onClick={(evt) => {
+                          setIsActivePage(page.toString());
+                          handlePageClick(evt);
+                        }}
+                        >{page}
+                        </Link>
+                      </li>
+                      :''))}
+                  {isNextPage && guitarsForRendering !== undefined && guitarsForRendering?.length > CARDS_PER_PAGE
+                    ? <NextPage pageURL={pageURL.toString()} onClick={handlePreviousNextPageClick} />
+                    : '' }
+                </ul>
+              </div>
             </div>
           </div>
-        </div>
-      </main>
-      <Footer />
-    </div>
+        </main>
+        <Footer />
+      </div>
+      {isModalCartAddVisible && <ModalCartAdd product={guitarToCart} setIsModalSuccessAddVisible={setIsModalSuccessAddVisible} setIsModalCartAddVisible={setIsModalCartAddVisible}/>}
+      {isModalSuccessAddVisible && <ModalSuccessAdd setIsModalSuccessAddVisible={setIsModalSuccessAddVisible}/>}
+    </>
   );
 }
 

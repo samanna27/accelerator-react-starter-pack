@@ -16,6 +16,8 @@ export const initialState = {
   cardsRendered: [0, CARDS_PER_PAGE],
   isDataLoaded: false,
   commentsRendered: 3,
+  productsInCart: [],
+  productsQuantityInCart: [],
 };
 
 const reducer = (state: State = initialState, action: Actions): State => {
@@ -81,6 +83,21 @@ const reducer = (state: State = initialState, action: Actions): State => {
         allGuitarsComments.push([id, comments]);
       }
       return {...state, allGuitarsComments};
+    }
+    case ActionType.AddProductToCart: {
+      const product = action.payload;
+      const productsInCart = state.productsInCart.slice();
+      const productsQuantityInCart = state.productsQuantityInCart.slice();
+      const ID_INDEX = 0;
+      const QUANTITY_INDEX = 1;
+      const searchedItem = productsQuantityInCart.filter((item) => item[ID_INDEX] === product.id);
+      if(searchedItem.length === 0) {
+        productsQuantityInCart.push([product.id, 1]);
+        productsInCart.push(product);
+      } else {
+        productsQuantityInCart.filter((item) => item[ID_INDEX] === product.id)[0][QUANTITY_INDEX] += 1;
+      }
+      return {...state, productsInCart, productsQuantityInCart};
     }
     default:
       return state;

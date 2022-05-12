@@ -5,6 +5,7 @@ import NotFoundScreen from '../not-found-screen/not-found-screen';
 import {connect, ConnectedProps} from 'react-redux';
 import {State} from '../../types/state';
 import GuitarPage from '../guitar-page/guitar-page';
+import CartPage from '../cart-page/cart-page';
 import LoadingScreen from '../loading-screen/loading-screen';
 
 const mapStateToProps = ({guitars, isDataLoaded}: State) => ({
@@ -32,6 +33,8 @@ function App(props: ConnectedComponentProps): JSX.Element {
         <Route path={AppRoute.Catalog} element={<CatalogPage/>}>
         </Route>
         <Route path={AppRoute.Guitar} element={<GuitarPage />}>
+        </Route>
+        <Route path={AppRoute.Cart} element={<CartPage />}>
         </Route>
         <Route path='*' element={<NotFoundScreen />}>
         </Route>

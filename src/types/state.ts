@@ -13,4 +13,6 @@ export type State = {
   cardsRendered: number[],
   isDataLoaded: boolean,
   commentsRendered: number,
+  productsInCart: Guitar[],
+  productsQuantityInCart: number[][],
 };
