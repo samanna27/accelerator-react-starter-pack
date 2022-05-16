@@ -99,6 +99,16 @@ const reducer = (state: State = initialState, action: Actions): State => {
       }
       return {...state, productsInCart, productsQuantityInCart};
     }
+    case ActionType.DeleteProductFromCart: {
+      const productToDelete = action.payload;
+      const productsInCart = state.productsInCart.slice();
+      const productsQuantityInCart = state.productsQuantityInCart.slice();
+      const productToDeleteIndex = productsInCart.map((item) => item.id).indexOf(productToDelete.id);
+      const quantityToDeleteIndex = productsQuantityInCart.map((item) => item[0]).indexOf(productToDelete.id);
+      productsInCart.splice(productToDeleteIndex, 1);
+      productsQuantityInCart.splice(quantityToDeleteIndex, 1);
+      return {...state, productsInCart, productsQuantityInCart};
+    }
     default:
       return state;
   }

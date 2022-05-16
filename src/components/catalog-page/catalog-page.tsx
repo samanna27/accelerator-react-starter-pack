@@ -43,7 +43,7 @@ function CatalogPage({guitars, sortType, orderType, minPriceFilter, maxPriceFilt
   const [guitarsFromTo, setGuitarsFromTo] = useState<number[]>([0,CARDS_PER_PAGE]);
   const [isModalCartAddVisible, setIsModalCartAddVisible] = useState<boolean>(false);
   const [isModalSuccessAddVisible, setIsModalSuccessAddVisible] = useState<boolean>(false);
-  const [guitarToCart, setGuitarToCart] = useState<Guitar>(guitars[1]);
+  const [guitarToCart, setGuitarToCart] = useState<Guitar>(guitars[0]);
   const pageURL: number = Math.round((cardsRendered[START_CARD_INDEX])/CARDS_PER_PAGE+1);
   const navigate = useNavigate();
   const location = useLocation();
@@ -262,10 +262,6 @@ function CatalogPage({guitars, sortType, orderType, minPriceFilter, maxPriceFilt
       }
     }
   };
-
-  // useEffect(() => {
-
-  // });
 
   return(
     <>

@@ -72,6 +72,11 @@ export const addProductToCart = (product: Guitar) => ({
   payload: product,
 } as const);
 
+export const deleteProductFromCart = (productToDelete: Guitar) => ({
+  type: ActionType.DeleteProductFromCart,
+  payload: productToDelete,
+} as const);
+
 export const UNKNOWN_ACTION = () => ({
   type: UNKNOWN_ACTION,
 } as const);

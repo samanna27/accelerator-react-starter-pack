@@ -71,7 +71,7 @@ function ProductCard({guitar, allGuitarsComments, setIsModalCartAddVisible, setG
         <div className="product-card__buttons">
           <Link className="button button--mini" to={`/guitars/${id}`}>Подробнее</Link>
           {productsInCart.slice().filter((productInCart) => productInCart.id === guitar.id).length === 0 && <a className="button button--red button--mini button--add-to-cart" href="#" onClick={handleAddToCartClick}>Купить</a>}
-          {productsInCart.slice().filter((productInCart) => productInCart.id === guitar.id).length > 0 && <a className="button button--red-border button--mini button--in-cart" href="#">В Корзине</a>}
+          {productsInCart.slice().filter((productInCart) => productInCart.id === guitar.id).length > 0 && <Link className="button button--red-border button--mini button--in-cart" to="/cart">В Корзине</Link>}
         </div>
       </div>
     );
