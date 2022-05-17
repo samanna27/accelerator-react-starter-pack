@@ -51,7 +51,7 @@ function GuitarPage({guitars, allGuitarsComments, commentsRendered}: ConnectedCo
   const [isReviewSentModalVisible, setIsReviewSentModalVisible] = useState<boolean>(false);
   const [isModalCartAddVisible, setIsModalCartAddVisible] = useState<boolean>(false);
   const [isModalSuccessAddVisible, setIsModalSuccessAddVisible] = useState<boolean>(false);
-  const { refPopup, refReviewSent, isComponentVisible, setIsComponentVisible } = useComponentVisible(true);
+  const { refPopup, refReviewSent, refCartAdd, refCartAddSuccess, isComponentVisible, setIsComponentVisible } = useComponentVisible(true);
   const { ref, inView } = useInView({
     threshold: 0,
   });
@@ -85,9 +85,9 @@ function GuitarPage({guitars, allGuitarsComments, commentsRendered}: ConnectedCo
   useEffect(() => {
     const body = document.querySelector('body');
     if(body !== null){
-      body.style.overflow = (isReviewPopupVisible || isReviewSentModalVisible) && isComponentVisible ? 'hidden' : 'auto';
+      body.style.overflow = (isReviewPopupVisible || isReviewSentModalVisible ||isModalCartAddVisible || isModalSuccessAddVisible ) && isComponentVisible ? 'hidden' : 'auto';
     }
-  }, [isReviewPopupVisible, isReviewSentModalVisible, isComponentVisible]);
+  }, [isReviewPopupVisible, isReviewSentModalVisible, isComponentVisible, isModalCartAddVisible, isModalSuccessAddVisible]);
 
   if(product === null || product === undefined) {
     navigate('*');
@@ -119,11 +119,15 @@ function GuitarPage({guitars, allGuitarsComments, commentsRendered}: ConnectedCo
       setIsReviewPopupVisible(true);
       setIsComponentVisible(true);
       setIsReviewSentModalVisible(false);
+      setIsModalCartAddVisible(false);
+      setIsModalSuccessAddVisible(false);
     };
 
     const handleAddToCartClick = (evt: MouseEvent<HTMLAnchorElement>) => {
       evt.preventDefault();
+      setIsModalSuccessAddVisible(false);
       setIsModalCartAddVisible(true);
+      setIsComponentVisible(true);
     };
 
     return (
@@ -239,8 +243,8 @@ function GuitarPage({guitars, allGuitarsComments, commentsRendered}: ConnectedCo
         <div ref={ref}></div>
         {isComponentVisible && isReviewPopupVisible && <PopupForm guitarName={name} refPopup={refPopup} setIsComponentVisible={setIsComponentVisible} setIsReviewPopupVisible={setIsReviewPopupVisible} setIsReviewSentModalVisible={setIsReviewSentModalVisible} guitarId={productId} />}
         {isComponentVisible && isReviewSentModalVisible && <ReviewSentModal id={id} refReviewSent={refReviewSent} setIsComponentVisible={setIsComponentVisible} setIsReviewSentModalVisible={setIsReviewSentModalVisible} setIsReviewPopupVisible={setIsReviewPopupVisible}/>}
-        {isModalCartAddVisible && <ModalCartAdd product={product} setIsModalSuccessAddVisible={setIsModalSuccessAddVisible} setIsModalCartAddVisible={setIsModalCartAddVisible}/>}
-        {isModalSuccessAddVisible && <ModalSuccessAdd setIsModalSuccessAddVisible={setIsModalSuccessAddVisible}/>}
+        {isComponentVisible && isModalCartAddVisible && <ModalCartAdd refCartAdd={refCartAdd} product={product} setIsComponentVisible={setIsComponentVisible} setIsModalSuccessAddVisible={setIsModalSuccessAddVisible} setIsModalCartAddVisible={setIsModalCartAddVisible}/>}
+        {isComponentVisible && isModalSuccessAddVisible && <ModalSuccessAdd refCartAddSuccess={refCartAddSuccess} setIsComponentVisible={setIsComponentVisible} setIsModalSuccessAddVisible={setIsModalSuccessAddVisible}/>}
       </>
     );
   }}

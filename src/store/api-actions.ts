@@ -4,9 +4,11 @@ import {
   loadGuitarComments,
   updateMinPriceFilter,
   setMaxPriceFilter,
-  addComment
+  addComment,
+  applyDiscount
 } from './action';
 import { APIRoute, OK_CODE, OK_CODE_TOP_RANGE } from '../const';
+import { CouponSent } from '../types/common';
 import { Guitar, Comment, CommentPost } from '../types/guitar';
 import {toast} from 'react-toastify';
 
@@ -52,5 +54,19 @@ export const fetchPostReviewAction = (newComment: CommentPost): ThunkActionResul
         });
     } catch {
       toast.info(COMMENT_POST_FAIL_MESSAGE);
+    }
+  };
+
+export const fetchCouponPostAction = (coupon: CouponSent): ThunkActionResult =>
+  async (dispatch, _getState, api) => {
+    try {
+      await api.post<CouponSent>(APIRoute.Coupon, coupon)
+        .then((data) => {
+          if(data.status >= OK_CODE && data.status <= OK_CODE_TOP_RANGE) {
+            dispatch(applyDiscount(data.data));
+          }
+        });
+    } catch {
+      dispatch(applyDiscount({coupon: null}));
     }
   };

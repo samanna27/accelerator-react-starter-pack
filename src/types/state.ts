@@ -15,4 +15,5 @@ export type State = {
   commentsRendered: number,
   productsInCart: Guitar[],
   productsQuantityInCart: number[][],
+  couponValue: number | null,
 };

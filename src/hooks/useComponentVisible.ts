@@ -5,6 +5,9 @@ export default function useComponentVisible(initialIsVisible: boolean) {
   const ref = useRef<HTMLDivElement | null>(null);
   const refPopup = useRef<HTMLDivElement | null>(null);
   const refReviewSent = useRef<HTMLDivElement | null>(null);
+  const refCartAdd = useRef<HTMLDivElement | null>(null);
+  const refCartAddSuccess = useRef<HTMLDivElement | null>(null);
+  const refCartDelete = useRef<HTMLDivElement | null>(null);
 
   const handleClickOutside = (evt: MouseEvent) => {
     if(ref.current && !ref.current.contains(evt?.target as Node)){
@@ -14,6 +17,15 @@ export default function useComponentVisible(initialIsVisible: boolean) {
       setIsComponentVisible(false);
     }
     if(refReviewSent.current && !refReviewSent.current.contains(evt?.target as Node)){
+      setIsComponentVisible(false);
+    }
+    if(refCartAdd.current && !refCartAdd.current.contains(evt?.target as Node)){
+      setIsComponentVisible(false);
+    }
+    if(refCartAddSuccess.current && !refCartAddSuccess.current.contains(evt?.target as Node)){
+      setIsComponentVisible(false);
+    }
+    if(refCartDelete.current && !refCartDelete.current.contains(evt?.target as Node)){
       setIsComponentVisible(false);
     }
   };
@@ -38,5 +50,5 @@ export default function useComponentVisible(initialIsVisible: boolean) {
     };
   },[]);
 
-  return { ref, refPopup, refReviewSent, isComponentVisible, setIsComponentVisible};
+  return { ref, refPopup, refReviewSent, refCartAdd, refCartAddSuccess, refCartDelete, isComponentVisible, setIsComponentVisible};
 }

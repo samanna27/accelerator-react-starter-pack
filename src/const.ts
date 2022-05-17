@@ -9,6 +9,7 @@ export enum AppRoute {
 export enum APIRoute {
   Guitars = '/guitars',
   Comment = '/comments',
+  Coupon = '/coupons',
 }
 
 export const MAX_STAR_RATING = 5;
@@ -63,3 +64,5 @@ export const DEFAULT_PAGES = 3;
 export const CHARACTERISTICS = ['Характеристики','Описание'];
 
 export const COMMENTS_SHOW_PER_CLICK = 3;
+
+export const KEYCODE_TAB = 9;

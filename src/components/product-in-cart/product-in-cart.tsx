@@ -3,10 +3,14 @@ import { GUITAR_TYPE_SINGLE } from '../../const';
 import { connect, ConnectedProps } from 'react-redux';
 import { State } from '../../types/state';
 import { ChangeEvent, FocusEvent, MouseEvent, useState, useRef, useEffect, Dispatch, SetStateAction} from 'react';
+import { addProductToCart } from '../../store/action';
+import { ThunkAppDispatch } from '../../types/action';
+import { store } from '../../store/store';
 
 type ProductInCartProps = {
   product: Guitar,
   setIsModalProductDeleteVisible: Dispatch<SetStateAction<boolean>>,
+  setIsComponentVisible: Dispatch<SetStateAction<boolean>>,
   setProductToDelete: Dispatch<SetStateAction<Guitar>>,
 };
 
@@ -20,7 +24,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & ProductInCartProps;
 
 
-function ProductInCart({product, productsQuantityInCart, setIsModalProductDeleteVisible, setProductToDelete}: ConnectedComponentProps): JSX.Element {
+function ProductInCart({product, productsQuantityInCart, setIsModalProductDeleteVisible, setIsComponentVisible, setProductToDelete}: ConnectedComponentProps): JSX.Element {
   const {name, vendorCode, stringCount, price, previewImg, type} = product;
   const imageAddress = `img/content${previewImg.substring(previewImg.indexOf('/'))}`;
   const [productQuantity, setProductQuantity] = useState<number>(productsQuantityInCart.filter((item) => item[0] === product.id)[0][1]);
@@ -54,6 +58,7 @@ function ProductInCart({product, productsQuantityInCart, setIsModalProductDelete
     }
 
     setProductQuantity(+value);
+    (store.dispatch as ThunkAppDispatch)(addProductToCart(product, +value));
 
     evt.target.reportValidity();
   };
@@ -63,13 +68,15 @@ function ProductInCart({product, productsQuantityInCart, setIsModalProductDelete
 
     if(evt.currentTarget.ariaLabel === 'Уменьшить количество' && productQuantity-1 > 0) {
       setProductQuantity(productQuantity-1);
+      (store.dispatch as ThunkAppDispatch)(addProductToCart(product, productQuantity-1));
     } else if(evt.currentTarget.ariaLabel === 'Уменьшить количество') {
-      evt.currentTarget.setCustomValidity('Количество не может быть меньше 1 или больше 99.');
-      evt.currentTarget.reportValidity();
+      setProductToDelete({...product});
+      setIsModalProductDeleteVisible(true);
     }
 
     if(evt.currentTarget.ariaLabel === 'Увеличить количество' && productQuantity+1 <= 99) {
       setProductQuantity(productQuantity+1);
+      (store.dispatch as ThunkAppDispatch)(addProductToCart(product, productQuantity+1));
     } else if(evt.currentTarget.ariaLabel === 'Увеличить количество'){
       evt.currentTarget.setCustomValidity('Количество не может быть меньше 1 или больше 99.');
       evt.currentTarget.reportValidity();
@@ -87,6 +94,7 @@ function ProductInCart({product, productsQuantityInCart, setIsModalProductDelete
     evt.preventDefault();
     setProductToDelete({...product});
     setIsModalProductDeleteVisible(true);
+    setIsComponentVisible(true);
   };
 
   return (

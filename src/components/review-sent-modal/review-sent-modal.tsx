@@ -1,4 +1,5 @@
-import { SetStateAction, Dispatch, MutableRefObject, MouseEvent } from 'react';
+import { SetStateAction, Dispatch, MutableRefObject, MouseEvent, useRef, KeyboardEvent } from 'react';
+import { KEYCODE_TAB } from '../../const';
 
 type ReviewSentModalProps = {
   setIsReviewSentModalVisible: Dispatch<SetStateAction<boolean>>;
@@ -9,7 +10,10 @@ type ReviewSentModalProps = {
 };
 
 function ReviewSentModal({setIsReviewPopupVisible, setIsReviewSentModalVisible, setIsComponentVisible, refReviewSent, id}: ReviewSentModalProps):JSX.Element {
-  const handleBackToGuitarCardCliick = (evt: MouseEvent<HTMLButtonElement>) => {
+  const goToCatalogRef = useRef<HTMLButtonElement>(null);
+  const closeModalRef = useRef<HTMLButtonElement>(null);
+
+  const handleBackToGuitarCardClick = (evt: MouseEvent<HTMLButtonElement>) => {
     evt.preventDefault();
     setIsReviewSentModalVisible(false);
   };
@@ -17,6 +21,26 @@ function ReviewSentModal({setIsReviewPopupVisible, setIsReviewSentModalVisible, 
   const closePopup = () => {
     setIsReviewPopupVisible(false);
     setIsComponentVisible(false);
+  };
+
+  const handleInputKeydown = (evt: KeyboardEvent<HTMLElement>) => {
+    const isTabPressed = (evt.key === 'Tab' || evt.keyCode === KEYCODE_TAB);
+
+    if (!isTabPressed) {
+      return;
+    }
+
+    if ( evt.shiftKey ) /* shift + tab */ {
+      if (document.activeElement === goToCatalogRef.current) {
+        closeModalRef.current?.focus();
+        evt.preventDefault();
+      }
+    } else /* tab */ {
+      if (document.activeElement === closeModalRef.current) {
+        goToCatalogRef.current?.focus();
+        evt.preventDefault();
+      }
+    }
   };
 
   return (
@@ -38,9 +62,9 @@ function ReviewSentModal({setIsReviewPopupVisible, setIsReviewSentModalVisible, 
               </svg>
               <p className="modal__message">Спасибо за ваш отзыв!</p>
               <div className="modal__button-container modal__button-container--review">
-                <button className="button button--small modal__button modal__button--review" onClick={handleBackToGuitarCardCliick}>К покупкам!</button>
+                <button ref={goToCatalogRef} autoFocus tabIndex={1} className="button button--small modal__button modal__button--review" onClick={handleBackToGuitarCardClick} onKeyDown={handleInputKeydown}>К покупкам!</button>
               </div>
-              <button onClick={closePopup} className="modal__close-btn button-cross" type="button" aria-label="Закрыть"><span className="button-cross__icon"></span><span className="modal__close-btn-interactive-area"></span>
+              <button ref={closeModalRef} tabIndex={2} onClick={closePopup} className="modal__close-btn button-cross" type="button" aria-label="Закрыть" onKeyDown={handleInputKeydown}><span className="button-cross__icon"></span><span className="modal__close-btn-interactive-area"></span>
               </button>
             </div>
           </div>

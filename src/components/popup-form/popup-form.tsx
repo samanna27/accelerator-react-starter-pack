@@ -3,6 +3,7 @@ import { fetchPostReviewAction } from '../../store/api-actions';
 import { ThunkAppDispatch } from '../../types/action';
 import { store } from '../../store/store';
 import { CommentPost } from '../../types/guitar';
+import { KEYCODE_TAB } from '../../const';
 
 type PopupFormProps = {
   setIsReviewPopupVisible: Dispatch<SetStateAction<boolean>>;
@@ -30,7 +31,6 @@ function PopupForm({setIsReviewPopupVisible, setIsComponentVisible, refPopup, gu
   const [disadvantage, setDisadvantage] = useState<string>('');
   const [newComment, setNewComment] = useState<string>('');
 
-  const KEYCODE_TAB = 9;
 
   const handleInputKeydown = (evt: KeyboardEvent<HTMLElement>) => {
     const isTabPressed = (evt.key === 'Tab' || evt.keyCode === KEYCODE_TAB);

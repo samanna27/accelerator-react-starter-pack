@@ -22,6 +22,7 @@ import {
   addComment,
   addProductToCart,
   deleteProductFromCart,
+  applyDiscount,
   UNKNOWN_ACTION
 } from '../store/action';
 
@@ -39,7 +40,8 @@ export enum ActionType {
   UpdateCommentsRendered = 'data/updateCommentsRendered',
   AddComment = 'data/addComment',
   AddProductToCart = 'data/addProductToCart',
-  DeleteProductFromCart = 'data/deleteProductFromCart'
+  DeleteProductFromCart = 'data/deleteProductFromCart',
+  ApplyDiscount = 'order/applyDiscount',
 }
 
 export type Actions =
@@ -57,6 +59,7 @@ export type Actions =
  | ReturnType<typeof addComment>
  | ReturnType<typeof addProductToCart>
  | ReturnType<typeof deleteProductFromCart>
+ | ReturnType<typeof applyDiscount>
  | ReturnType<typeof UNKNOWN_ACTION>;
 
 export type ThunkActionResult<R = Promise<void>> = ThunkAction<R, State, AxiosInstance, Actions>;

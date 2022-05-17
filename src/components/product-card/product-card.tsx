@@ -13,6 +13,8 @@ type ProductCardProps = {
   guitar: Guitar;
   setGuitarToCart: Dispatch<SetStateAction<Guitar>>;
   setIsModalCartAddVisible: Dispatch<SetStateAction<boolean>>;
+  setIsModalSuccessAddVisible: Dispatch<SetStateAction<boolean>>;
+  setIsComponentVisible: Dispatch<SetStateAction<boolean>>;
 };
 
 const mapStateToProps = ({allGuitarsComments, currentId, productsInCart}: State) => ({
@@ -26,12 +28,14 @@ const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & ProductCardProps;
 
-function ProductCard({guitar, allGuitarsComments, setIsModalCartAddVisible, setGuitarToCart, productsInCart}: ConnectedComponentProps): JSX.Element {
+function ProductCard({guitar, allGuitarsComments, setIsModalCartAddVisible, setIsModalSuccessAddVisible, setIsComponentVisible, setGuitarToCart, productsInCart}: ConnectedComponentProps): JSX.Element {
   const exit = '';
 
   const handleAddToCartClick = () => {
     setGuitarToCart({...guitar});
+    setIsModalSuccessAddVisible(false);
     setIsModalCartAddVisible(true);
+    setIsComponentVisible(true);
   };
 
   useEffect(() => {

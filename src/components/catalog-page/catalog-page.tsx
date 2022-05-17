@@ -19,6 +19,7 @@ import PreviousPage from './previous-page';
 import NextPage from './next-page';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router';
+import useComponentVisible from '../../hooks/useComponentVisible';
 
 const mapStateToProps = ({guitars, sortType, orderType, minPriceFilter, maxPriceFilter, guitarType, stringsQuantity, cardsRendered}: State) => ({
   guitars,
@@ -43,6 +44,7 @@ function CatalogPage({guitars, sortType, orderType, minPriceFilter, maxPriceFilt
   const [guitarsFromTo, setGuitarsFromTo] = useState<number[]>([0,CARDS_PER_PAGE]);
   const [isModalCartAddVisible, setIsModalCartAddVisible] = useState<boolean>(false);
   const [isModalSuccessAddVisible, setIsModalSuccessAddVisible] = useState<boolean>(false);
+  const { refCartAdd, refCartAddSuccess, isComponentVisible, setIsComponentVisible } = useComponentVisible(true);
   const [guitarToCart, setGuitarToCart] = useState<Guitar>(guitars[0]);
   const pageURL: number = Math.round((cardsRendered[START_CARD_INDEX])/CARDS_PER_PAGE+1);
   const navigate = useNavigate();
@@ -192,6 +194,13 @@ function CatalogPage({guitars, sortType, orderType, minPriceFilter, maxPriceFilt
     setGuitarsFromTo([START_CARD_INDEX, CARDS_PER_PAGE]);
   }, [guitarType, stringsQuantity]);
 
+  useEffect(() => {
+    const body = document.querySelector('body');
+    if(body !== null){
+      body.style.overflow = (isModalCartAddVisible || isModalSuccessAddVisible) ? 'hidden' : 'auto';
+    }
+  }, [isModalCartAddVisible, isModalSuccessAddVisible]);
+
   const handlePreviousNextPageClick = (evt: SyntheticEvent<HTMLAnchorElement>) => {
     evt.preventDefault();
 
@@ -281,7 +290,7 @@ function CatalogPage({guitars, sortType, orderType, minPriceFilter, maxPriceFilt
               <CatalogSort />
               <div className="cards catalog__cards">
                 {guitarsForRendering?.slice(cardsRendered[START_CARD_INDEX],cardsRendered[END_CARD_INDEX]).map((guitar) => (
-                  <ProductCard key={guitar.id} guitar={guitar} setIsModalCartAddVisible={setIsModalCartAddVisible} setGuitarToCart={setGuitarToCart}/>
+                  <ProductCard key={guitar.id} guitar={guitar} setIsModalCartAddVisible={setIsModalCartAddVisible} setIsModalSuccessAddVisible={setIsModalSuccessAddVisible} setGuitarToCart={setGuitarToCart} setIsComponentVisible={setIsComponentVisible}/>
                 ))}
               </div>
               <div className="pagination page-content__pagination">
@@ -311,8 +320,8 @@ function CatalogPage({guitars, sortType, orderType, minPriceFilter, maxPriceFilt
         </main>
         <Footer />
       </div>
-      {isModalCartAddVisible && <ModalCartAdd product={guitarToCart} setIsModalSuccessAddVisible={setIsModalSuccessAddVisible} setIsModalCartAddVisible={setIsModalCartAddVisible}/>}
-      {isModalSuccessAddVisible && <ModalSuccessAdd setIsModalSuccessAddVisible={setIsModalSuccessAddVisible}/>}
+      {isComponentVisible && isModalCartAddVisible && <ModalCartAdd refCartAdd={refCartAdd} product={guitarToCart} setIsComponentVisible={setIsComponentVisible} setIsModalSuccessAddVisible={setIsModalSuccessAddVisible} setIsModalCartAddVisible={setIsModalCartAddVisible}/>}
+      {isComponentVisible && isModalSuccessAddVisible && <ModalSuccessAdd refCartAddSuccess={refCartAddSuccess} setIsComponentVisible={setIsComponentVisible} setIsModalSuccessAddVisible={setIsModalSuccessAddVisible}/>}
     </>
   );
 }

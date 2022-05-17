@@ -1,5 +1,6 @@
 import { ActionType } from '../types/action';
 import { Guitar, Comment } from '../types/guitar';
+import { Coupon } from '../types/common';
 import { AppRoute } from '../const';
 
 export const loadGuitars = (guitars: Guitar[]) => ({
@@ -67,14 +68,22 @@ export const addComment = (newComment: Comment) => ({
   payload: newComment,
 } as const);
 
-export const addProductToCart = (product: Guitar) => ({
+export const addProductToCart = (product: Guitar, quantity: number) => ({
   type: ActionType.AddProductToCart,
-  payload: product,
+  payload: {
+    product,
+    quantity,
+  },
 } as const);
 
 export const deleteProductFromCart = (productToDelete: Guitar) => ({
   type: ActionType.DeleteProductFromCart,
   payload: productToDelete,
+} as const);
+
+export const applyDiscount = (discount: Coupon) => ({
+  type: ActionType.ApplyDiscount,
+  payload: discount,
 } as const);
 
 export const UNKNOWN_ACTION = () => ({

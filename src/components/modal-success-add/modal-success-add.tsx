@@ -1,12 +1,17 @@
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, MutableRefObject, SetStateAction, useRef, KeyboardEvent } from 'react';
 import { useNavigate } from 'react-router';
+import { KEYCODE_TAB } from '../../const';
 
 type ModalSuccessAddProps = {
   setIsModalSuccessAddVisible: Dispatch<SetStateAction<boolean>>;
+  setIsComponentVisible: Dispatch<SetStateAction<boolean>>;
+  refCartAddSuccess: MutableRefObject<HTMLDivElement | null>;
 };
 
-function ModalSuccessAdd({setIsModalSuccessAddVisible}: ModalSuccessAddProps):JSX.Element {
+function ModalSuccessAdd({setIsModalSuccessAddVisible, setIsComponentVisible, refCartAddSuccess}: ModalSuccessAddProps):JSX.Element {
   const navigate = useNavigate();
+  const goToCartRef = useRef<HTMLButtonElement>(null);
+  const closeModalRef = useRef<HTMLButtonElement>(null);
 
   const handleGoToCartClick = () => {
     navigate('/cart');
@@ -19,6 +24,27 @@ function ModalSuccessAdd({setIsModalSuccessAddVisible}: ModalSuccessAddProps):JS
 
   const handleClosePopupClick = () => {
     setIsModalSuccessAddVisible(false);
+    setIsComponentVisible(false);
+  };
+
+  const handleInputKeydown = (evt: KeyboardEvent<HTMLElement>) => {
+    const isTabPressed = (evt.key === 'Tab' || evt.keyCode === KEYCODE_TAB);
+
+    if (!isTabPressed) {
+      return;
+    }
+
+    if ( evt.shiftKey ) /* shift + tab */ {
+      if (document.activeElement === goToCartRef.current) {
+        closeModalRef.current?.focus();
+        evt.preventDefault();
+      }
+    } else /* tab */ {
+      if (document.activeElement === closeModalRef.current) {
+        goToCartRef.current?.focus();
+        evt.preventDefault();
+      }
+    }
   };
 
   return  (
@@ -34,16 +60,16 @@ function ModalSuccessAdd({setIsModalSuccessAddVisible}: ModalSuccessAddProps):JS
         <div className="modal is-active modal--success modal-for-ui-kit">
           <div className="modal__wrapper">
             <div className="modal__overlay" data-close-modal></div>
-            <div className="modal__content">
+            <div ref={refCartAddSuccess} className="modal__content">
               <svg className="modal__icon" width="26" height="20" aria-hidden="true">
                 <use xlinkHref="#icon-success"></use>
               </svg>
               <p className="modal__message">Товар успешно добавлен в корзину</p>
               <div className="modal__button-container modal__button-container--add">
-                <button className="button button--small modal__button" onClick={handleGoToCartClick}>Перейти в корзину</button>
-                <button className="button button--black-border button--small modal__button modal__button--right" onClick={handleGoToCatalogClick}>Продолжить покупки</button>
+                <button ref={goToCartRef} autoFocus tabIndex={1} className="button button--small modal__button" onClick={handleGoToCartClick} onKeyDown={handleInputKeydown}>Перейти в корзину</button>
+                <button tabIndex={2} className="button button--black-border button--small modal__button modal__button--right" onClick={handleGoToCatalogClick}>Продолжить покупки</button>
               </div>
-              <button className="modal__close-btn button-cross" type="button" aria-label="Закрыть" onClick={handleClosePopupClick}>
+              <button ref={closeModalRef} tabIndex={3} className="modal__close-btn button-cross" type="button" aria-label="Закрыть" onClick={handleClosePopupClick} onKeyDown={handleInputKeydown}>
                 <span className="button-cross__icon"></span>
                 <span className="modal__close-btn-interactive-area"></span>
               </button>

@@ -18,6 +18,7 @@ export const initialState = {
   commentsRendered: 3,
   productsInCart: [],
   productsQuantityInCart: [],
+  couponValue: 0,
 };
 
 const reducer = (state: State = initialState, action: Actions): State => {
@@ -85,17 +86,18 @@ const reducer = (state: State = initialState, action: Actions): State => {
       return {...state, allGuitarsComments};
     }
     case ActionType.AddProductToCart: {
-      const product = action.payload;
+      const product = action.payload.product;
+      const productQuantity = action.payload.quantity;
       const productsInCart = state.productsInCart.slice();
       const productsQuantityInCart = state.productsQuantityInCart.slice();
       const ID_INDEX = 0;
       const QUANTITY_INDEX = 1;
       const searchedItem = productsQuantityInCart.filter((item) => item[ID_INDEX] === product.id);
       if(searchedItem.length === 0) {
-        productsQuantityInCart.push([product.id, 1]);
+        productsQuantityInCart.push([product.id, productQuantity]);
         productsInCart.push(product);
       } else {
-        productsQuantityInCart.filter((item) => item[ID_INDEX] === product.id)[0][QUANTITY_INDEX] += 1;
+        productsQuantityInCart.filter((item) => item[ID_INDEX] === product.id)[0][QUANTITY_INDEX] = productQuantity;
       }
       return {...state, productsInCart, productsQuantityInCart};
     }
@@ -108,6 +110,15 @@ const reducer = (state: State = initialState, action: Actions): State => {
       productsInCart.splice(productToDeleteIndex, 1);
       productsQuantityInCart.splice(quantityToDeleteIndex, 1);
       return {...state, productsInCart, productsQuantityInCart};
+    }
+    case ActionType.ApplyDiscount: {
+      let couponValue: number | null = 0;
+      if (action.payload.coupon === null) {
+        couponValue = null;
+      } else {
+        couponValue = Number(action.payload);
+      }
+      return {...state, couponValue};
     }
     default:
       return state;
