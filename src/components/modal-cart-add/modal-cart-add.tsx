@@ -4,6 +4,8 @@ import { ThunkAppDispatch } from '../../types/action';
 import { store } from '../../store/store';
 import { Guitar } from '../../types/guitar';
 import { KEYCODE_TAB } from '../../const';
+import { connect, ConnectedProps } from 'react-redux';
+import { State } from '../../types/state';
 
 type ModalCartAddProps = {
   product: Guitar;
@@ -13,9 +15,22 @@ type ModalCartAddProps = {
   refCartAdd: MutableRefObject<HTMLDivElement | null>;
 };
 
-function ModalCartAdd({product, setIsModalCartAddVisible, setIsComponentVisible, setIsModalSuccessAddVisible, refCartAdd}: ModalCartAddProps): JSX.Element {
+const mapStateToProps = ({productsQuantityInCart}: State) => ({
+  productsQuantityInCart,
+});
+
+const connector = connect(mapStateToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+type ConnectedComponentProps = PropsFromRedux & ModalCartAddProps
+
+function ModalCartAdd({product, setIsModalCartAddVisible, setIsComponentVisible, setIsModalSuccessAddVisible, refCartAdd, productsQuantityInCart}: ConnectedComponentProps): JSX.Element {
   const {name, vendorCode, stringCount, previewImg, price} = product;
   const imageAddress = `../img/content${previewImg.substring(previewImg.indexOf('/'))}`;
+  let productQuantity = 0;
+  if(productsQuantityInCart.filter((item) => item[0] === product.id).length > 0) {
+    productQuantity = productsQuantityInCart.filter((item) => item[0] === product.id)[0][1];
+  }
   const addToCartRef = useRef<HTMLButtonElement>(null);
   const closeModalRef = useRef<HTMLButtonElement>(null);
 
@@ -25,7 +40,7 @@ function ModalCartAdd({product, setIsModalCartAddVisible, setIsComponentVisible,
   };
 
   const handleAddProductToCartClick = () => {
-    (store.dispatch as ThunkAppDispatch)(addProductToCart(product, 1));
+    (store.dispatch as ThunkAppDispatch)(addProductToCart(product, productQuantity+1));
     setIsModalCartAddVisible(false);
     setIsModalSuccessAddVisible(true);
   };
@@ -79,4 +94,5 @@ function ModalCartAdd({product, setIsModalCartAddVisible, setIsComponentVisible,
   );
 }
 
-export default ModalCartAdd;
+export {ModalCartAdd};
+export default connector(ModalCartAdd);
