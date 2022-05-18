@@ -62,9 +62,6 @@ export const fetchCouponPostAction = (coupon: CouponSent): ThunkActionResult =>
     try {
       await api.post<CouponSent>(APIRoute.Coupon, coupon)
         .then((data) => {
-          //eslint-disable-next-line
-          console.log(data.data, data);
-
           if(data.status >= OK_CODE && data.status <= OK_CODE_TOP_RANGE) {
             dispatch(applyDiscount(data.data));
           }
