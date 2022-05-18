@@ -81,7 +81,7 @@ export const deleteProductFromCart = (productToDelete: Guitar) => ({
   payload: productToDelete,
 } as const);
 
-export const applyDiscount = (discount: Coupon) => ({
+export const applyDiscount = (discount: Coupon | string) => ({
   type: ActionType.ApplyDiscount,
   payload: discount,
 } as const);

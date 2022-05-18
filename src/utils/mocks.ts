@@ -57,3 +57,26 @@ export const makeFakeCommentToPost = (guitarId: number): CommentPost => ({
   rating: 3,
   guitarId: guitarId,
 });
+
+export const makeFakeCommentToAdd = (guitarId: number, commentId: number): Comment => ({
+  id: commentId,
+  userName: 'Boris',
+  advantage: 'prum',
+  disadvantage: 'vrum',
+  comment: 'vrim',
+  rating: 3,
+  createAt: date.recent().toString(),
+  guitarId: guitarId,
+});
+
+export const makeFakeGuitar = (guitarId: number): Guitar => ({
+  id: guitarId,
+  name: name.title(),
+  vendorCode: nanoid(),
+  type: 'acoustic',
+  description: 'very,very good',
+  previewImg: internet.avatar(),
+  stringCount: 4,
+  rating: 3,
+  price: 12000,
+});

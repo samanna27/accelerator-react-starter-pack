@@ -113,7 +113,7 @@ const reducer = (state: State = initialState, action: Actions): State => {
     }
     case ActionType.ApplyDiscount: {
       let couponValue: number | null = 0;
-      if (action.payload.coupon === null) {
+      if (typeof(action.payload) === 'object') {
         couponValue = null;
       } else {
         couponValue = Number(action.payload);

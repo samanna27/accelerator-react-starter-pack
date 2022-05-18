@@ -7,8 +7,8 @@ import { Action } from 'redux';
 import { makeFakeGuitars, FakeMinPrice, FakeMaxPrice, makeFakeComments, makeFakeCommentToPost } from '../utils/mocks';
 import { APIRoute } from '../const';
 import { Guitar, CommentPost } from '../types/guitar';
-import { loadGuitars, updateMinPriceFilter, setMaxPriceFilter, loadGuitarComments, addComment } from './action';
-import { fetchProductsAction, fetchCommentsDataAction, fetchPostReviewAction } from './api-actions';
+import { loadGuitars, updateMinPriceFilter, setMaxPriceFilter, loadGuitarComments, addComment, applyDiscount } from './action';
+import { fetchProductsAction, fetchCommentsDataAction, fetchPostReviewAction, fetchCouponPostAction } from './api-actions';
 import { date } from 'faker';
 
 describe('Async actions', () => {
@@ -66,6 +66,36 @@ describe('Async actions', () => {
 
     expect(store.getActions()).toEqual([
       addComment({...fakeCommentToPost, createAt: dateOfCommentCreation, id: 1}),
+    ]);
+  });
+
+  it('should dispatch ApplyDiscount with discount rate when POST /coupons with correct code', async () => {
+    const fakeCorrectCoupon = {coupon: 'light-333'};
+    const fakeDiscount = '15';
+    mockAPI
+      .onPost(APIRoute.Coupon)
+      .reply(200, {coupon: fakeDiscount});
+
+    const store = mockStore();
+    await store.dispatch(fetchCouponPostAction(fakeCorrectCoupon));
+
+    expect(store.getActions()).toEqual([
+      applyDiscount({coupon: fakeDiscount}),
+    ]);
+  });
+
+  it('should dispatch ApplyDiscount with null coupon when POST /coupons with incorrect code', async () => {
+    const fakeCorrectCoupon = {coupon: 'bla-bla'};
+    const fakeDiscount = null;
+    mockAPI
+      .onPost(APIRoute.Coupon)
+      .reply(400);
+
+    const store = mockStore();
+    await store.dispatch(fetchCouponPostAction(fakeCorrectCoupon));
+
+    expect(store.getActions()).toEqual([
+      applyDiscount({coupon: fakeDiscount}),
     ]);
   });
 });
