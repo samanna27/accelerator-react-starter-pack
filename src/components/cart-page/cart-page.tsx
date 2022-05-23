@@ -38,8 +38,6 @@ function CartPage({productsInCart, productsQuantityInCart, couponValue}: Connect
     totalValueBeforeDiscount += totalPerProduct;
   });
 
-  window.scrollTo(0, 0);
-
   useEffect(() => {
     if(typeof couponValue === 'number' && couponValue !== 0) {
       setCouponAccepted(true);
@@ -49,7 +47,7 @@ function CartPage({productsInCart, productsQuantityInCart, couponValue}: Connect
       setCouponRejected(true);
       setCouponAccepted(false);
     }
-  }, [couponValue]);
+  }, [couponValue, totalValueBeforeDiscount]);
 
   const orderValue = totalValueBeforeDiscount - discountValue;
 
