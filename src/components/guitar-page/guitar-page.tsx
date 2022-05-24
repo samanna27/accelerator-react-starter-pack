@@ -44,8 +44,10 @@ function GuitarPage({guitars, allGuitarsComments, commentsRendered}: ConnectedCo
   const product = guitars.slice().find((element) => element.id === productId);
   const comments: Comment[] | undefined = [...allGuitarsComments].slice().find((guitarComments) => guitarComments[0] === productId)?.[1].sort(sortCommentsDateDown);
   const exit = '';
+  let yScroll = 0;
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [characteristic, setCharacteristic] = useState<string>(CHARACTERISTICS[0]);
+  const navigate = useNavigate();
   const [showMoreFlag, setShowMoreFlag] = useState<boolean>(true);
   const [isReviewPopupVisible, setIsReviewPopupVisible] = useState<boolean>(false);
   const [isReviewSentModalVisible, setIsReviewSentModalVisible] = useState<boolean>(false);
@@ -55,12 +57,10 @@ function GuitarPage({guitars, allGuitarsComments, commentsRendered}: ConnectedCo
   const { ref, inView } = useInView({
     threshold: 0,
   });
-  const navigate = useNavigate();
-  const [yScroll, setYScroll] = useState(0);
 
   useEffect(() => {
-    window.scrollTo(0, yScroll);
-  });
+    window.scrollTo(0,0);
+  }, []);
 
   useEffect(() => {
     if(comments !== undefined && commentsRendered !== comments.length){
@@ -99,7 +99,8 @@ function GuitarPage({guitars, allGuitarsComments, commentsRendered}: ConnectedCo
 
     const handleShowMoreButtonClick = (evt: MouseEvent<HTMLButtonElement>) => {
       evt.preventDefault();
-      setYScroll(window.scrollY);
+      yScroll = window.scrollY;
+      window.scrollTo(0,yScroll);
       if(comments !== undefined && commentsRendered !== comments.length){
         const commentsRenderedQuantity: number = commentsRendered + Math.min(COMMENTS_SHOW_PER_CLICK, (comments.length-commentsRendered));
         (store.dispatch as ThunkAppDispatch)(updateCommentsRendered(commentsRenderedQuantity));

@@ -6,7 +6,7 @@ import { ThunkAppDispatch } from '../../types/action';
 import { store } from '../../store/store';
 import { connect, ConnectedProps } from 'react-redux';
 import { State } from '../../types/state';
-import { useEffect, Dispatch, SetStateAction } from 'react';
+import { useEffect, Dispatch, SetStateAction, MouseEvent} from 'react';
 import { Link } from 'react-router-dom';
 
 type ProductCardProps = {
@@ -31,7 +31,8 @@ type ConnectedComponentProps = PropsFromRedux & ProductCardProps;
 function ProductCard({guitar, allGuitarsComments, setIsModalCartAddVisible, setIsModalSuccessAddVisible, setIsComponentVisible, setGuitarToCart, productsInCart}: ConnectedComponentProps): JSX.Element {
   const exit = '';
 
-  const handleAddToCartClick = () => {
+  const handleAddToCartClick = (evt: MouseEvent<HTMLAnchorElement>) => {
+    evt.preventDefault();
     setGuitarToCart({...guitar});
     setIsModalSuccessAddVisible(false);
     setIsModalCartAddVisible(true);

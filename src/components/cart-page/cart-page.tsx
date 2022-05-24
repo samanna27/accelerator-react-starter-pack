@@ -39,6 +39,10 @@ function CartPage({productsInCart, productsQuantityInCart, couponValue}: Connect
   });
 
   useEffect(() => {
+    window.scrollTo(0,0);
+  }, []);
+
+  useEffect(() => {
     if(typeof couponValue === 'number' && couponValue !== 0) {
       setCouponAccepted(true);
       setCouponRejected(false);
