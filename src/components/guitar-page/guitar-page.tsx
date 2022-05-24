@@ -125,6 +125,8 @@ function GuitarPage({guitars, allGuitarsComments, commentsRendered}: ConnectedCo
 
     const handleAddToCartClick = (evt: MouseEvent<HTMLAnchorElement>) => {
       evt.preventDefault();
+      setIsReviewPopupVisible(false);
+      setIsReviewSentModalVisible(false);
       setIsModalSuccessAddVisible(false);
       setIsModalCartAddVisible(true);
       setIsComponentVisible(true);

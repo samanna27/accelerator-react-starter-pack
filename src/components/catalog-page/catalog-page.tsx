@@ -197,9 +197,9 @@ function CatalogPage({guitars, sortType, orderType, minPriceFilter, maxPriceFilt
   useEffect(() => {
     const body = document.querySelector('body');
     if(body !== null){
-      body.style.overflow = (isModalCartAddVisible || isModalSuccessAddVisible) ? 'hidden' : 'auto';
+      body.style.overflow = (isModalCartAddVisible || isModalSuccessAddVisible) && isComponentVisible? 'hidden' : 'auto';
     }
-  }, [isModalCartAddVisible, isModalSuccessAddVisible]);
+  }, [isModalCartAddVisible, isModalSuccessAddVisible, isComponentVisible]);
 
   const handlePreviousNextPageClick = (evt: SyntheticEvent<HTMLAnchorElement>) => {
     evt.preventDefault();
